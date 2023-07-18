@@ -1,13 +1,11 @@
 ---
-title: bessel
+title: A Primary Solution to Bessel's Problem
 date: 2020-05-13 10:52:17
 tags:
   - Mathematics
 mathjax: true
-top_img: http://home.ustc.edu.cn/~pscgylotti/images/bg15.jpg
-cover: http://home.ustc.edu.cn/~pscgylotti/images/bg15.jpg
 ---
-
+This page is added for detecting whether the equaiton is working.
 ## Bessel's Problem
 $$\text{Calculate:}\ \ \ \ \zeta(2)=\sum\limits_{n=1}^{\infty}\frac{1}{n^2}$$
 
