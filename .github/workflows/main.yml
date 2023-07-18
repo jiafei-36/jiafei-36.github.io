@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main  # default branch
+    paths:
+      - source/**
 
 jobs:
   pages:
