@@ -8,7 +8,7 @@ type: "Home"
 
 ### Brief
 
-I'm a <span style="color:blue">student</span> major in CS <span style="color:green" title="Year 2023">now</span>
+I am a student major in CS <span style="color:green" title="Year 2023">now</span>
 
 with Interesting in CG and CV and also TCS.
 
@@ -18,4 +18,4 @@ Personal Email: <a href="mailto:pscgylotti@gmail.com">pscgylotti@gmail.com</a>
 
 ### Educational Information
 
-2019-2023: University of Science and Technologies of China (USTC)<a href="https://www.ustc.edu.cn"><i class="fal fa-university" /></a>, Bachelor Degree.
+2019-2023: University of Science and Technologies of China (USTC)<a href="https://www.ustc.edu.cn"><i class="fa-sharp fa-light fa-building-columns"></i></a>, Bachelor Degree.
