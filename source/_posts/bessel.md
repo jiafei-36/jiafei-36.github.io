@@ -5,7 +5,9 @@ tags:
   - Mathematics
 mathjax: true
 ---
-This page is added for detecting whether the equaiton is working.
+
+<span style="color:red">This page intends for testing whether the equation renderer works.</span>
+
 ## Bessel's Problem
 $$\text{Calculate:}\ \ \ \ \zeta(2)=\sum\limits_{n=1}^{\infty}\frac{1}{n^2}$$
 
