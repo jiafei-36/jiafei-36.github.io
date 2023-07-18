@@ -1,10 +1,8 @@
 ---
-title: Home
+title: Welcome to my personal website
 date: 2023-07-18
 type: "Home"
 ---
-
-## Welcome to my personal website
 
 ### Brief
 
@@ -18,4 +16,17 @@ Personal Email: <a href="mailto:pscgylotti@gmail.com">pscgylotti@gmail.com</a>
 
 ### Educational Information
 
-2019-2023: University of Science and Technologies of China (USTC)<a href="https://www.ustc.edu.cn"><i class="fa-sharp fa-light fa-building-columns"></i></a>, Bachelor Degree.
+2019-2023: University of Science and Technologies of China (USTC)<a href="https://www.ustc.edu.cn"><i class="fa fa-book"></i></a>, Bachelor Degree.
+
+### Technology Tree
+
+* Object-Oriented Programming <i class="fa fa-computer"></i>
+* Web-based Components Integration <i class="fa fa-code"></i>
+* Digital Visual Art (within the range of human cognition) <i class="fa fa-palette"></i>
+* Wave-based Music (within the range of human perception) <i class="fa fa-waveform"></i>
+* High Dimensional and Non-euclidean Rendering <i class="fa fa-chart-scatter-3d"></i>
+* Statistical Optimization <i class="fa fa-chart-simple"></i>
+* Non-abstract Mathematics <i class="fa fa-function"></i>
+* Rekursiv and Logic Theory <i class="fa fa-diagram-venn"></i>
+* Graph and Bayesian-Statistics based Society Cognition <i class="fa fa-circle-nodes"></i>
+* Spatial-Temporal-Hierarchical Physical Universe Cognition <i class="fa fa-atom"></i>
