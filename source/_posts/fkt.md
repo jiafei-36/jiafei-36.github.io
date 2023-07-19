@@ -25,7 +25,9 @@ We want to know there are how many different perfect coverages (Let it be $f(m,n
 
 Provided $m=1$, we can easily derive that $f(1,n)=1$.
 
-Provided $m=2$, by simply assuming two states of the last two columns, we know that $f(2,n)=f(2,n-1)+f(2,n-2),f(2,1)=1,f(2,2)=2$, which is reduced to the Fibonacci Series.
+Provided $m=2$, by simply assuming two states of the last two columns, we know that 
+$$f(2,n)=f(2,n-1)+f(2,n-2),f(2,1)=1,f(2,2)=2$$
+which is reduced to the Fibonacci Series.
 
 #### Dynamic Programming
 
@@ -177,9 +179,9 @@ At first, we prove that for an even-dimentional complex invertible antisymmetric
 
 $$\boldsymbol A=\boldsymbol P^T\boldsymbol J\boldsymbol P$$
 where $\boldsymbol J_{2n\times 2n}$ is given by:
-$$\boldsymbol J=\text{diag}\left\lbrack\underbrace{\left(\begin{matrix}0&1\\ -1&0\end{matrix}\right),\left(\begin{matrix}0&1\\-1&0\end{matrix}\right),\cdots,\left(\begin{matrix}0&1\\-1&0\end{matrix}\right)}_{n}\right\rbrack$$
+$$\boldsymbol J=\text{diag}\left\lbrack\underbrace{\left(\begin{matrix}0&1\\ -1&0\end{matrix}\right),\left(\begin{matrix}0&1\\ -1&0\end{matrix}\right),\cdots,\left(\begin{matrix}0&1\\ -1&0\end{matrix}\right)}_{n}\right\rbrack$$
 and for non-even or singular-even $A_{d\times d}$ case, there also exists an invertible matrix $\boldsymbol P$ such that:
-$$\boldsymbol A=\boldsymbol P^T\tilde{\boldsymbol J}\boldsymbol A)P$$
+$$\boldsymbol A=\boldsymbol P^T\tilde{\boldsymbol J}\boldsymbol P$$
 where $\tilde{\boldsymbol J}$ takes the form of:
 $$\tilde{\boldsymbol J}=\left\lbrack\begin{matrix}\boldsymbol J_{2r\times 2r}&\boldsymbol O_{2r\times(d-2r)}\\ \boldsymbol O_{(d-2r)\times2r}&\boldsymbol O_{(d-2r)\times(d-2r)}\end{matrix}\right\rbrack$$
 To prove this, assuming $\boldsymbol A_{d\times d}$ have the following form:
@@ -191,21 +193,23 @@ Let $\boldsymbol Q$ be an elementary operation of row (of course invertible), th
 Since the rank of an antisymmetric would not be $1$, we could alway reorder the indices (the reorder operation can also be treated with form $\boldsymbol Q^T\boldsymbol A\boldsymbol Q$ where $\boldsymbol Q$ is invertible) such that $\text{rank}(\boldsymbol U)=2$ until $\boldsymbol A=\boldsymbol O$.
 
 Because $\text{rank}(\boldsymbol A)\geq\text{rank}(\boldsymbol V)$, so we can apply series of paired elementary operations such that :
-$$(\boldsymbol Q\cdots)^T\boldsymbol A\boldsymbol (Q\cdots)=\left\lbrack\begin{matrix}\boldsymbol U'_{2\times 2}&\boldsymbol O_{2\times (d-2)}\\ \boldsymbol O_{(d-2)\times 2}&\boldsymbol V'_{(d-2)\times (d-2)}\end{matrix}\right\rbrack$$
+$$(\boldsymbol Q\cdots)^T\boldsymbol A\boldsymbol (\boldsymbol Q\cdots)=\left\lbrack\begin{matrix}\boldsymbol U'_{2\times 2}&\boldsymbol O_{2\times (d-2)}\\ \boldsymbol O_{(d-2)\times 2}&\boldsymbol V'_{(d-2)\times (d-2)}\end{matrix}\right\rbrack$$
 
-and then scale $V'$ to $\left(\begin{matrix}0&1\\-1&0\end{matrix}\right)$:
+and then scale $V'$ to $\left(\begin{matrix}0&1\\ -1&0\end{matrix}\right)$:
 
-$$(\boldsymbol Q\cdots)^T\boldsymbol A\boldsymbol (Q\cdots)=\left\lbrack\begin{matrix}0&1&0&\cdots&0\\ -1&0&0&\cdots&0\\ 0&0&\ddots&\cdots&\cdots\\ \vdots&\vdots&\vdots&\ddots& \\ 0&0&\vdots&&\ddots \end{matrix}\right\rbrack$$
+$$(\boldsymbol Q\cdots)^T\boldsymbol A\boldsymbol (\boldsymbol Q\cdots)=\left\lbrack\begin{matrix}0&1&0&\cdots&0\\ -1&0&0&\cdots&0\\ 0&0&\ddots&\cdots&\cdots\\ \vdots&\vdots&\vdots&\ddots& \\ 0&0&\vdots&&\ddots \end{matrix}\right\rbrack$$
 
 With this result, the original statement is proved recursively.
 
-Now we can write down that $\text{det}(\boldsymbol A)=\text{det}(\boldsymbol P^T\boldsymbol J\boldsymbol P)=\text{det}^2(\boldsymbol P)\text{det}(J)=\text{det}^2(\boldsymbol P)$.
+Now we can write down that $\text{det}(\boldsymbol A)=\text{det}(\boldsymbol P^T\boldsymbol J\boldsymbol P)=\text{det}^2(\boldsymbol P)\text{det}(\boldsymbol J)=\text{det}^2(\boldsymbol P)$.
 
 While term $a_{i,j}$ can be written as:
 
-$$\begin{aligned}a_{i,j}&=\sum\limits_{k=1}^{2n}\sum\limits_{l=1}^{2n}(p^T)_{i,k}j_{k,l}p{l,j}=\sum\limits_{k=1}^{2n}\sum\limits_{l=1}^{2n}p_{k,i}j_{k,l}p{l,j}\\ &=\sum\limits_{k=1}^n\left(p_{2k-1,i}p_{2k,j}-p_{2k,i}p_{2k-1,j}\right)\end{aligned}$$
+$$\begin{aligned}a_{i,j}&=\sum\limits_{k=1}^{2n}\sum\limits_{l=1}^{2n}(p^T)_{i,k}j_{k,l}p_{l,j}=\sum\limits_{k=1}^{2n}\sum\limits_{l=1}^{2n}p_{k,i}j_{k,l}p_{l,j}\\ &=\sum\limits_{k=1}^n\left(p_{2k-1,i}p_{2k,j}-p_{2k,i}p_{2k-1,j}\right)\end{aligned}$$
 
+Consider the property of one single additive term with form $p_{2k-1,i}p_{2k,j}-p_{2k,i}p_{2k-1,j}$ inside the pfaffian summation definition, then each additive term with form $p_{2k-1,i}p_{2k,j}-p_{2k,i}p_{2k-1,j}$ especially for a fixed $k$ inside the production will take the form like (here we detect what will happen when two factors in the production have the same k):
 
+$$\begin{aligned}\frac{1}{2^n}\sum\limits_{\sigma\in S_{2n}}&\text{sgn}(\sigma)\left(p_{2k-1,i_1}p_{2k,i_2}-p_{2k-1,i_2}p_{2k,i_1}\right)\left(p_{2k-1,i_3}p_{2k,i_4}-p_{2k-1,i_4}p_{2k,i_3}\right)\\ &\left(p_{2k_3-1,i_5}p_{2k_3,i_6}-p_{2k_3-1,i_6}p_{2k_3,i_5}\right)\times\cdots\times\left(p_{2k_n-1,i_{2n-1}}p_{2k_n,i_{2n}}-p_{2k_n-1,i_{2n}}p_{2k_n,i_{2n-1}}\right)\\ =0\end{aligned}$$
 
 
 
