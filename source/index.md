@@ -35,8 +35,8 @@ Github: [pscgylotti](https://github.com/Pscgylotti) <i class="fa-brands fa-githu
 
 {% raw %}
 <style>
-  body{
-    font-family: serif;
+  .post-body{
+    font-family: cursive;
   }
 </style>
 {%  endraw %}
