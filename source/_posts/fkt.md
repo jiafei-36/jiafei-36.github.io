@@ -40,7 +40,7 @@ $$r_i=\cdots 10000111\cdots$$
 
 However, two gird with adjacent rows and same column cannot take state $0$ simultaneously (a so-called double $0$ conflit), which means:
 
-$$r_{i} | r_{i+1} =\cdots 11111111 \cdots$$
+$$r_{i} | r_{i+1} =\underbrace{\cdots 11111111\cdots}_{\text{all is 1}}$$
 
 here "|" denotes the bitwise **OR** operation.
 
@@ -77,13 +77,17 @@ All those compatible state string pairs can be calculated with a Deep First Sear
   + $(s_1\mid_{a_{l+1}=1},s_2\mid_{b_{l+1}=0},l+1)$ (place a vertical tile spans $i+1$-th row and $i+2$-th row).
 + for any searching state with $l=n$ rightly, record its state string pair as a compatible state pair and stop jumping to next state. (if $l=n+1$, do not record it, since it is an illegal form.)
  
-We can easily write down the searching split tree equation as $f(l)=2f(l+1)+f(l+2),f(n)=1$ and a trivial transformation $f(l)+(\sqrt2-1)f(l+1)=(\sqrt2+1)\left\lbrack f(l+1)+(\sqrt2-1)f(l+2)\right\rbrack$ which implies the above searching algorithm has a temporal complexity of $\mathcal O\left((\sqrt2+1)^n\right)$
+We can easily write down the searching split tree equation as $f(l)=2f(l+1)+f(l+2),f(n)=1$ and a trivial transformation $f(l)+(\sqrt2-1)f(l+1)=(\sqrt2+1)\left\lbrack f(l+1)+(\sqrt2-1)f(l+2)\right\rbrack$ which implies the above searching algorithm has a temporal complexity of $\mathcal O\left((\sqrt2+1)^n\right)$ .
 
 The record of all compatible string pairs is marked as $CSP=\left\lbrace(s_1,s_2)_1,(s_1,s_2)_2,(s_1,s_2)_3,\cdots,(s_1,s_2)_p\right\rbrace$ where p is the amount of all compatible string pairs.
 
-Now setting $DP(i,r_i)$ representing the amount of different perfect coverages (till $i$-th row) when $i$-th row taking state string of $r_i$.
+Now setting $DP(i,r_i)$ representing the amount of different perfect coverages (till $i$-th row, that is to say the $1$-th to $i$-th rows are all fulfilled with no conflicts) when $i$-th row taking state string of $r_i$.
 
+We can initiate $DP(0,r_0)$ as:
 
+$$DP(0,r_0)=\left\lbrace\begin{aligned}1,\text{if}~r_0=\underbrace{\cdots 111111\cdots}_{\text{all is 1}}\\0, \text{Otherwise.}\end{aligned}\right$$ ,
+
+since this is a compatible extension, as "$0$-th" row would not protrude to $1$-th row if it takes all state 1. 
 
 
 
