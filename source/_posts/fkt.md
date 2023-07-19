@@ -178,11 +178,13 @@ At first, we prove that for an even-dimentional complex invertible antisymmetric
 $$\boldsymbol A=\boldsymbol P^T\boldsymbol J\boldsymbol P$$
 where $\boldsymbol J_{2n\times 2n}$ is given by:
 $$\boldsymbol J=\text{diag}\left\lbrack\underbrace{\left(\begin{matrix}0&1\\-1&0\end{matrix}\right),\left(\begin{matrix}0&1\\-1&0\end{matrix}\right),\cdots,\left(\begin{matrix}0&1\\-1&0\end{matrix}\right)}_{n}\right\rbrack$$
-and for non-even or singular-even $A_{d\times d}$ case, also exists an invertible matrix $\boldsymbol P$ such that:
+and for non-even or singular-even $A_{d\times d}$ case, there also exists an invertible matrix $\boldsymbol P$ such that:
 $$\boldsymbol A=\boldsymbol P^T\tilde{\boldsymbol J}P$$
 where $\tilde{\boldsymbol J}$ takes the form of:
 $$\tilde{\boldsymbol J}=\left\lbrack\begin{matrix}\boldsymbol J_{2r\times 2r}&\boldsymbol O_{2r\times(d-2r)}\\ \boldsymbol O_{(d-2r)\times2r}&\boldsymbol O_{(d-2r)\times(d-2r)}\end{matrix}\right\rbrack$$
+To prove this, assuming $\boldsymbol A_{d\times d}$ have the following form:
 
+$$\left\lbrack\begin{matrix}a_{1,1}&a_{1,2}&a_{1,3}&\cdots&a_{1,d}\\ a_{2,1}&a_{2,2}&a_{2,3}&\cdots&a_{2,d}\\ a_{3,1}&a_{3,2}&\ddots&\cdots&\cdots\\ \vdots&\vdots&\vdots&\ddots& \\ a_{d,1}&a_{d,2}&\vdots&&\ddots \end{matrix}\right\rbrack$$
 
 
 
