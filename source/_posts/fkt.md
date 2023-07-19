@@ -151,9 +151,17 @@ We can compute determinat with **Gaussian Elimination** in $\mathcal O(n^3)$, bu
 
 ### Pfaffian
 
-Now we abandon the bipartite adjacency matrix and return to the normal adjacency matrix, 
-
+Now we abandon the bipartite adjacency matrix and return to the normal adjacency matrix. The perfect match amount for a $n,n$-bipartite graph is given by:
 
 $$\text{PerfectMatch}(G)=\frac{1}{2^nn!}\sum\limits_{\sigma\in S_{2n}}\prod\limits_{i=1}^na_{\sigma(2i-1),\sigma(2i)}$$
 
+However, since it is bipartite, we can reorder the vertices of $V=V_1\cup V_2$ such that the $1$-th till $n$-th vertices belong to $V_1$ and $n+1$-th till $2n$-th vertices belong to $V_2$. Under the new order,the adjacency martix takes the form of:
+
+$$\left\lbrack\begin{matrix}\boldsymbol O&\boldsymbol{BiA}\\ \boldsymbol{BiA}^T&O\end{matrix}\right\rbrack$$
+
+The bipartite adjacency matrix returns again. Clearly we have $\text{perm}(\boldsymbol A)=\text{perm}(\boldsymbol{BiA})^2$ (for any two additive terms $\prod\limits_{i=1}^na_{i,\sigma_1(i)}$ and $\prod\limits_{i=1}^na_{i,\sigma_2(i)}$ in $\text{perm}(\boldsymbol{BiA})$, there exists additive term $\left(\prod\limits_{i=1}^na_{i,\sigma_s(i)}\right)^2$ and $\prod\limits_{i=1}^na_{i,\sigma_1(i)}\cdot\prod\limits_{i=1}^na_{i,\sigma_2(i)}$ in $\text{perm}(\boldsymbol A)$).
+
+Here we introduce the **Pfaffian**.
+
+We 
 ![Directing](/images/Directional.svg)
