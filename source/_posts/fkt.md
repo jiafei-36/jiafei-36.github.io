@@ -128,12 +128,25 @@ The amount of perfect coverage automatically transforms into the amount of perfe
 
 ### Permanent
 
-If the two partitons ($V_1,V_2$) of a bipartite graph $G$ have equal vertices count ($|V_1|=|V_2|=\nu$), then we can write down a Bipartite Adjacent Matrix as:
-$$BiA=\left(a_{i,j}\right)_{\nu\times\nu},a_{i,j}=\left\lbrace \begin{aligned}1&,~\text{if}~v_i~\text{in}~V_1~\text{is adjacent to}~v_j~\text{in}~V2;\\0&,~\text{Otherwise}\end{aligned}\right.$$
+If the two partitons ($V_1,V_2$) of a bipartite graph $G$ have equal vertices count ($|V_1|=|V_2|=\nu$), then we can write down a Bipartite Adjacency Matrix as:
+$$\boldsymbol{BiA}=\left(a_{i,j}\right)_{\nu\times\nu},a_{i,j}=\left\lbrace \begin{aligned}1&,~\text{if}~v_i~\text{in}~V_1~\text{is adjacent to}~v_j~\text{in}~V2;\\0&,~\text{Otherwise}\end{aligned}\right.$$
 
+We know that a determinat of a square matrix $\boldsymbol A=(a_{i,j})_{n\times n}$ is given by:
 
+$$\text{det}(\boldsymbol A)=\sum\limits_{\sigma\in S_n}\prod\limits_{i=1}^n(-1)\text{sgn} (\sigma) a_{i,\sigma(i)}$$
 
+where $S_{n}$ represents the full permutation of $\lbrace 1,2,\cdots,n\rbrace$ .
 
+However, if we remove the term of signature, we will get:
 
+$$\text{perm}(\boldsymbol A)=\sum\limits_{\sigma\in S_n}\prod\limits_{i=1}^n(-1) a_{i,\sigma(i)}$$
+
+This is the so-called **Permanent**. For a Bipartite Adjacency Matrix $\boldsymbol{BiA}$, the perfect match number is equal to its permanet $perm(\boldsymbol{BiA})$.
+
+This is trivial in fact since the permanent just try each case of the permutation brute-forcely, with a temporal complexity $\mathcal O(n!)$
+
+We can compute determinat with **Gaussian Elimination** in $\mathcal O(n^3)$, but it is hard to find an efficient algorithm for calculating permanent.
+
+### Pfaffian
 
 ![Directing](/images/Directional.svg)
