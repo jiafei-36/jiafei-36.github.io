@@ -38,7 +38,7 @@ we use $0$ denote case 1, and $1$ for case 2 and 3. For each row of the board, w
 
 $$r_i=\cdots 10000111\cdots$$
 
-However, two gird with adjacent rows and same column cannot take state $0$ simultaneously, which means:
+However, two gird with adjacent rows and same column cannot take state $0$ simultaneously (a so-called double $0$ conflit), which means:
 
 $$r_{i} | r_{i+1} =\cdots 11111111 \cdots$$
 
@@ -51,10 +51,10 @@ For grid at $i$-th row $j$-th column (marked as $(i,j)$):
 + If $(i,j)$ have been determined, skip to $(i,j+1)$
 + If $(i-1,j)$ takes $0$, $(i,j)$ automatically takes $1$, and then we consider $(i,j+1)$ ;
 + If $(i-1,j)$ takes $1$ :
-+ + We put a horizontal tile and $(i,j),(i,j+1)$ both take $1$ , the next one to be considered is $(i,j+2)$
+  + We put a horizontal tile and $(i,j),(i,j+1)$ both take $1$ , the next one to be considered is $(i,j+2)$
    (Note that we are traversing the board line by line. if $(i,j)$ is covered by a horizontal tile spans $j-1$-th and $j$-th column
-    it must have been skipped when we were considering $(i,j-1)$. We cannot choose this way when $j=n$) ;+--+
-+ + We put a vertical tile and $(i,j)$ takes $0$, $(i+1,j)$ takes $1$. The next one to be considered is $(i,j+1)$ .
+    it must have been skipped when we were considering $(i,j-1)$. We cannot choose this way when $j=n$) ;
+  + We put a vertical tile and $(i,j)$ takes $0$, $(i+1,j)$ takes $1$. The next one to be considered is $(i,j+1)$ .
 
 (Assuming a simple extension that $(i,n+1)$ automatically transforming into $ (i+1,1)$.)
 
@@ -63,7 +63,25 @@ and a perfect coverage takes a fixed collection of state strings.
 
 The last row must takes all-ones state ($r_n=\cdots 11111111 \cdots$).
 
-Now setting $DP(i,r_i)$ representing the amount of different perfect coverages when $i$-th row taking state string of $r_i$.
+To solve this, we first look into the state of two adjacent rows $r_i,r_{i+1}$:
+
+We say two state string $s_1,s_2$ is compatible, if and only if row $s_1|s_2=1$ (No double $0$ conflict) while $r_i=s_1$ and $r_{i+1}=s_2$ indeed be fully convered (it is not required to consider whether there is a vertical tile span to $i-1$-th row or $i+2$-th row, we can just take care of $r_i$ and $r_{i+1}$).
+
+All those compatible state string pairs can be calculated with a Deep First Search:
+
++ We define the searching state as $(s_1,s_2,l)$ where $l\in\lbrace 0,1,\cdots,n\rbrace$. Assuming $s_1=a_1a_2a_3\cdots a_n,s_2=b_1b_2b_3\cdots b_n$, $l$ denotes that $a_1a_2\cdots a_l$ and $b_1b_2\cdots b_l$ is determined, while $a_{l+1}a_{l+2}\cdots a_n$ and $b_{l+1}b_{l+2}\cdots b_n$ remain undetermined;
++ We start from state $(X,X,0)$ (since $l=0$ implies no state is determined, we use $X$ denotes a casual state);
++ When it cames to state $(s_1=a_1a_2\cdots a_n,s_2=b_1b_2\cdots b_n,l)$ the next hops are:
+  + $(s_1\mid_{a_{l+1}=1,a_{l+2}=1},s_2\mid_{b_{l+1}=1,b_{l+2}=1},l+2)$ (If we put a horizontal tile at $i+1$-th row spans $l+1$-th column and $l+2$-th column ,then $a_{i+1}$ and $a_{i+2}$ must not take $0$ ,or the vertical tile will protrude into the horizontal one) ;
+  + $(s_1\mid_{a_{l+1}=0},s_2\mid_{b_{l+1}=1},l+1)$ (place a vertical tile spans $i$-th row and $i+1$-th row) ;
+  + $(s_1\mid_{a_{l+1}=1},s_2\mid_{b_{l+1}=0},l+1)$ (place a vertical tile spans $i+1$-th row and $i+2$-th row).
++ for any searching state with $l=n$ rightly, record its state string pair as a compatible state pair and stop jumping to next state. (if $l=n+1$, do not record it, since it is an illegal form.)
+ 
+We can easily write down the searching split tree equation as $f(l)=2f(l+1)+f(l+2),f(n)=1$ and a trivial transformation $f(l)+(\sqrt2-1)f(l+1)=(\sqrt2+1)\left\lbrack f(l+1)+(\sqrt2-1)f(l+2)\right\rbrack$ which implies the above searching algorithm has a temporal complexity of $\mathcal O\left((\sqrt2+1)^n\right)$
+
+The record of all compatible string pairs is marked as $CSP=\left\lbrace(s_1,s_2)_1,(s_1,s_2)_2,(s_1,s_2)_3,\cdots,(s_1,s_2)_p\right\rbrace$ where p is the amount of all compatible string pairs.
+
+Now setting $DP(i,r_i)$ representing the amount of different perfect coverages (till $i$-th row) when $i$-th row taking state string of $r_i$.
 
 
 
