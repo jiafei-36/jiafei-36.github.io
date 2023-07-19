@@ -209,9 +209,13 @@ $$\begin{aligned}a_{i,j}&=\sum\limits_{k=1}^{2n}\sum\limits_{l=1}^{2n}(p^T)_{i,k
 
 Consider the property of one single additive term with form $p_{2k-1,i}p_{2k,j}-p_{2k,i}p_{2k-1,j}$ inside the pfaffian summation definition, then each additive term with form $p_{2k-1,i}p_{2k,j}-p_{2k,i}p_{2k-1,j}$ especially for a fixed $k$ inside the production will take the form like (here we detect what will happen when two factors in the production have the same k):
 
-$$\begin{aligned}\frac{1}{2^n}\sum\limits_{\sigma\in S_{2n}}&\text{sgn}(\sigma)\left(p_{2k-1,i_1}p_{2k,i_2}-p_{2k-1,i_2}p_{2k,i_1}\right)\left(p_{2k-1,i_3}p_{2k,i_4}-p_{2k-1,i_4}p_{2k,i_3}\right)\\ &\left(p_{2k_3-1,i_5}p_{2k_3,i_6}-p_{2k_3-1,i_6}p_{2k_3,i_5}\right)\times\cdots\times\left(p_{2k_n-1,i_{2n-1}}p_{2k_n,i_{2n}}-p_{2k_n-1,i_{2n}}p_{2k_n,i_{2n-1}}\right)\\ =0\end{aligned}$$
+$$\begin{aligned}\sum\limits_{\sigma\in S_{2n}}&\text{sgn}(\sigma)\left(p_{2k-1,i_1}p_{2k,i_2}-p_{2k-1,i_2}p_{2k,i_1}\right)\left(p_{2k-1,i_3}p_{2k,i_4}-p_{2k-1,i_4}p_{2k,i_3}\right)\\ &\left(p_{2k_3-1,i_5}p_{2k_3,i_6}-p_{2k_3-1,i_6}p_{2k_3,i_5}\right)\times\cdots\times\left(p_{2k_n-1,i_{2n-1}}p_{2k_n,i_{2n}}-p_{2k_n-1,i_{2n}}p_{2k_n,i_{2n-1}}\right)\\ =0\end{aligned}$$
 
+The zero outcome is derived by noting that if we swap $i_1$ and $i_3$ or $i_2$ and $i_4$, which then causing the signature to flip one times, will generate opposite component and elinimate each others.
 
+So all the $k$ inside each factor shall be different in order to avoid vanishing inside the summation. It follows that:
+
+$$\begin{aligned}\text{pf}(\boldsymbol A)&=\frac{1]{2^nn!}\sum\limits_{\sigma\in S_{2n}}\text{sgn}(\sigma)\prod\limits_{s=1}^n\left(p_{2i-1,i_{2i-1}}p_{2i,i_{2i}}-p_{2i-1,i_{2i}}p_{2i,i_{2i-1}}\right)\\ &=\sum\limits_{1\leq i_1,i_2,\cdots,i_{2n}\leq 2n}\varepsilon_{i_1i_2\cdots i_{2n}}\prod\limits_{j=1}^{2n}p_{j,i_j}\\ &=\text{det}\boldsymbol P\end{aligned}$$
 
 
 
