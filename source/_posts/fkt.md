@@ -211,18 +211,28 @@ Consider the property of one single additive term with form $p_{2k-1,i}p_{2k,j}-
 
 $$\begin{aligned}\sum\limits_{\sigma\in S_{2n}}&\text{sgn}(\sigma)\left(p_{2k-1,i_1}p_{2k,i_2}-p_{2k-1,i_2}p_{2k,i_1}\right)\left(p_{2k-1,i_3}p_{2k,i_4}-p_{2k-1,i_4}p_{2k,i_3}\right)\\ &\left(p_{2k_3-1,i_5}p_{2k_3,i_6}-p_{2k_3-1,i_6}p_{2k_3,i_5}\right)\times\cdots\times\left(p_{2k_n-1,i_{2n-1}}p_{2k_n,i_{2n}}-p_{2k_n-1,i_{2n}}p_{2k_n,i_{2n-1}}\right)\\ =0\end{aligned}$$
 
+(here we abbreviate $\sigma(t)$ as $i_t$)
+
 The zero outcome is derived by noting that if we swap $i_1$ and $i_3$ or $i_2$ and $i_4$, which then causing the signature to flip one times, will generate opposite component and elinimate each others.
 
 So all the $k$ inside each factor shall be different in order to avoid vanishing inside the summation. It follows that:
 
-$$\begin{aligned}\text{pf}(\boldsymbol A)&=\frac{1}{2^nn!}\sum\limits_{\sigma\in S_{2n}}\text{sgn}(\sigma)\prod\limits_{s=1}^n\left(p_{2i-1,i_{2i-1}}p_{2i,i_{2i}}-p_{2i-1,i_{2i}}p_{2i,i_{2i-1}}\right)\\ &=\sum\limits_{1\leq i_1,i_2,\cdots,i_{2n}\leq 2n}\varepsilon_{i_1i_2\cdots i_{2n}}\prod\limits_{j=1}^{2n}p_{j,i_j}\\ &=\text{det}\boldsymbol P\end{aligned}$$
+$$\begin{aligned}\text{pf}(\boldsymbol A)&=\frac{1}{2^nn!}\sum\limits_{\sigma\in S_{2n}}\text{sgn}(\sigma)\prod\limits_{s=1}^n\left(p_{2s-1,i_{2s-1}}p_{2s,i_{2s}}-p_{2s-1,i_{2s}}p_{2s,i_{2s-1}}\right)\\ &=\sum\limits_{1\leq i_1,i_2,\cdots,i_{2n}\leq 2n}\varepsilon_{i_1i_2\cdots i_{2n}}\prod\limits_{j=1}^{2n}p_{j,i_j}\\ &=\text{det}(\boldsymbol P)\end{aligned}$$
 
+Thus we prove that $\text{pf}^2(\boldsymbol A)=\text{det}(\boldsymbol A)$.
 
+### Fisher-Kasteleyn-Temperley Algorithm
 
+Since the pfaffian differs from perfect match amount only by a signature factor, we now give each edge of the BPG a direction, and change the adjacency matrix into directional adjacency matrix $\boldsymbol A^*=(a_{i,j})_{2n\times 2n}$ with rules:
++ $a^*_{i,j}=-1$ when there exists edge $v_i\to v_j$ ;
++ $a^*_{i,j}=1$ when there exists edge $v_j\to v_i$$ ;
++ $a^*_{i,j}=0$ when there is no edge relating $v_i$ with $v_j$.
 
+If we can find an orientation for a BPG such that the signature introduced by orientation happens to be same with $\text{sgn}(\sigma)$, thus we can calculate $\sqrt{\text{det}(\boldsymbol A^*)}=\text{pf}(\boldsymbol A^*)=\text{PerfectMatch}(\boldsymbol A)$ with temporal complexity of $\mathcal O (n^3)$.
 
+An additive factor $\text{sgn}(\sigma)\prod\limits_{i=1}^na_{\sigma(2i-1),\sigma(2i)}$ is non-zero if and only if $(\sigma(1),\sigma(2)),(\sigma(3),\sigma(4)),\cdots,(\sigma(2n-1),\sigma(2n))$ is a perfect match.
 
-
-
+Consider an orientation strategy as:
++ Since there is no odd cycle, when we traverse the cycle clockwise, we can orient edges on the cycle with odd amount of 
 
 ![Directing](/images/Directional.svg)
