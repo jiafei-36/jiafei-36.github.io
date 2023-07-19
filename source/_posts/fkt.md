@@ -201,7 +201,8 @@ $$(\boldsymbol Q\cdots)^T\boldsymbol A\boldsymbol (\boldsymbol Q\cdots)=\left\lb
 
 With this result, the original statement is proved recursively.
 
-Now we can write down that $\text{det}(\boldsymbol A)=\text{det}(\boldsymbol P^T\boldsymbol J\boldsymbol P)=\text{det}^2(\boldsymbol P)\text{det}(\boldsymbol J)=\text{det}^2(\boldsymbol P)$.
+Now we can write down that 
+$$\text{det}(\boldsymbol A)=\text{det}(\boldsymbol P^T\boldsymbol J\boldsymbol P)=\text{det}^2(\boldsymbol P)\text{det}(\boldsymbol J)=\text{det}^2(\boldsymbol P)$$
 
 While term $a_{i,j}$ can be written as:
 
@@ -225,14 +226,34 @@ Thus we prove that $\text{pf}^2(\boldsymbol A)=\text{det}(\boldsymbol A)$.
 
 Since the pfaffian differs from perfect match amount only by a signature factor, we now give each edge of the BPG a direction, and change the adjacency matrix into directional adjacency matrix $\boldsymbol A^*=(a_{i,j})_{2n\times 2n}$ with rules:
 + $a^*_{i,j}=-1$ when there exists edge $v_i\to v_j$ ;
-+ $a^*_{i,j}=1$ when there exists edge $v_j\to v_i$$ ;
++ $a^*_{i,j}=1$ when there exists edge $v_j\to v_i$ ;
 + $a^*_{i,j}=0$ when there is no edge relating $v_i$ with $v_j$.
 
-If we can find an orientation for a BPG such that the signature introduced by orientation happens to be same with $\text{sgn}(\sigma)$, thus we can calculate $\sqrt{\text{det}(\boldsymbol A^*)}=\text{pf}(\boldsymbol A^*)=\text{PerfectMatch}(\boldsymbol A)$ with temporal complexity of $\mathcal O (n^3)$.
+If we can find an orientation for a BPG such that the signature introduced by orientation happens to be same with $\text{sgn}(\sigma)$, thus we can calculate $\sqrt{\text{det}(\boldsymbol A^*)}=|\text{pf}(\boldsymbol A^*)|=\text{PerfectMatch}(\boldsymbol A)$ with temporal complexity of $\mathcal O (n^3)$.
 
-An additive factor $\text{sgn}(\sigma)\prod\limits_{i=1}^na_{\sigma(2i-1),\sigma(2i)}$ is non-zero if and only if $(\sigma(1),\sigma(2)),(\sigma(3),\sigma(4)),\cdots,(\sigma(2n-1),\sigma(2n))$ is a perfect match.
+An additive factor $\text{sgn}(\sigma)\prod\limits_{i=1}^na_{\sigma(2i-1),\sigma(2i)}$ is non-zero if and only if 
+$$(\sigma(1),\sigma(2)),(\sigma(3),\sigma(4)),\cdots,(\sigma(2n-1),\sigma(2n))$$
+is a perfect match.
 
 Consider an orientation strategy as:
-+ Since there is no odd cycle, when we traverse the cycle clockwise, we can orient edges on the cycle with odd amount of 
++ Since there is no odd cycle, when we traverse any cycle clockwise, we can orient edges on the cycle with odd amount of edges in the same direction and odd amount of edges in the opposite direction (We call this state a double-odd state);
++ We can first choose a cycle and orient each edge of it till reaching double-odd state, and then choose another cycle share edges with it (still requires double-odd). Untill all cycles have been oriented.
++ The double-odd state is extensive, since, when you conjunct two cycle into a larger one, the edges of same and opposite direction are vanishing in pairs, so all the cycles can reach double-odd together.
++ Edge does not belong to any cycle can be treated arbitrarily since their matching is fixed (from the leave vertex one by one).
+
+In fact, there are only two type of matching states on an even cycle (imagine a coloring method of alternately applying two color to the even cycle).
+
+We can simply denote the two perfect match as:
+
+$$(1,2),(3,4),\cdots,(2n-1,2n)$$
+
+and
+
+$$(2,3),(4,5),\cdots,(2n-2,2n-1),(2n,1)$$
+
+For both states, a half of the edges are chosen and because of the double-odd property, their directional signature is opposite, while their permutation signature is opposite too. Thus, their final signature keep same.
+
+Also, this property of single even cycle can be easily extended to conjunction of them.
+
 
 ![Directing](/images/Directional.svg)
