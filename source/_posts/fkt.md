@@ -4,6 +4,8 @@ date: 2021-07-25 23:44:51
 tags:
   - Mathematics
   - Algorithm
+  - Graph Theory
+  - Computer Science
 mathjax: true
 ---
 
@@ -148,5 +150,10 @@ This is trivial in fact since the permanent just try each case of the permutatio
 We can compute determinat with **Gaussian Elimination** in $\mathcal O(n^3)$, but it is hard to find an efficient algorithm for calculating permanent.
 
 ### Pfaffian
+
+Now we abandon the bipartite adjacency matrix and return to the normal adjacency matrix, 
+
+
+$$\text{PerfectMatch}(G)=\frac{1}{2^nn!}\sum\limits_{\sigma\in S_{2n}}\prod\limits_{i=1}^na_{\sigma(2i-1),\sigma(2i)}$$
 
 ![Directing](/images/Directional.svg)
