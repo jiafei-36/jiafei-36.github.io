@@ -13,7 +13,7 @@ mathjax: true
 
 #### Question Description
 
-Assuming we have a regular lattice board of size $m\times n$ (provided that $2\mid mn$). 
+Assuming we have a regular grid board of size $m\times n$ (provided that $2\mid mn$). 
 
 A perfect coverage is to completely covering the entire board with $1\times 2$ tiles which guaranteeing no extra parts and no overlap.
 
@@ -56,7 +56,7 @@ For grid at $i$-th row $j$-th column (marked as $(i,j)$):
     it must have been skipped when we were considering $(i,j-1)$. We cannot choose this way when $j=n$) ;
   + We put a vertical tile and $(i,j)$ takes $0$, $(i+1,j)$ takes $1$. The next one to be considered is $(i,j+1)$ .
 
-(Assuming a simple extension that $(i,n+1)$ automatically transforming into $ (i+1,1)$.)
+Assuming a simple extension that $(i,n+1)$ automatically transforms into $ (i+1,1)$.
 
 Apparently a legal collection of state strings $\lbrack r_1,r_2,\cdots,r_m\rbrack$ determines only one perfect coverage,
 and a perfect coverage takes a fixed collection of state strings.
@@ -77,20 +77,19 @@ All those compatible state string pairs can be calculated with a Deep First Sear
   + $(s_1\mid_{a_{l+1}=1},s_2\mid_{b_{l+1}=0},l+1)$ (place a vertical tile spans $i+1$-th row and $i+2$-th row).
 + for any searching state with $l=n$ rightly, record its state string pair as a compatible state pair and stop jumping to next state. (if $l=n+1$, do not record it, since it is an illegal form.)
  
-We can easily write down the searching split tree equation as $f(l)=2f(l+1)+f(l+2),f(n)=1$ and a trivial transformation $f(l)+(\sqrt2-1)f(l+1)=(\sqrt2+1)\left\lbrack f(l+1)+(\sqrt2-1)f(l+2)\right\rbrack$ which implies the above searching algorithm has a temporal complexity of $\mathcal O\left((\sqrt2+1)^n\right)$ .
+We can easily write down the searching split tree equation as $f(l)=2f(l+1)+f(l+2)+1,f(n)=1$ and a trivial transformation $f(l)+(\sqrt2-1)f(l+1)+\frac{\sqrt2}{2}=(\sqrt2+1)\left\lbrack f(l+1)+(\sqrt2-1)f(l+2)+\frac{\sqrt2}{2}\right\rbrack$ which implies the above searching algorithm has a temporal complexity of $\mathcal O\left((\sqrt2+1)^n\right)$ .
 
-The record of all compatible string pairs is marked as $CSP=\left\lbrace(s_1,s_2)_1,(s_1,s_2)_2,(s_1,s_2)_3,\cdots,(s_1,s_2)_p\right\rbrace$ where p is the amount of all compatible string pairs.
+The record of all compatible string pairs is marked as $CSP=\left\lbrace(s_1,s_2)_1,(s_1,s_2)_2,(s_1,s_2)_3,\cdots,(s_1,s_2)_p\right\rbrace$ where $p$ is the amount of all compatible string pairs satisfying $p=\mathcal O \left((\sqrt2+1)^n\right)$ too.
 
 Now setting $DP(i,r_i)$ representing the amount of different perfect coverages (till $i$-th row, that is to say the $1$-th to $i$-th rows are all fulfilled with no conflicts) when $i$-th row taking state string of $r_i$.
 
 We can initiate $DP(0,r_0)$ as:
 
-$$DP(0,r_0)=\left\lbrace\begin{aligned}1,\text{if}~r_0=\underbrace{\cdots 111111\cdots}_{\text{all is 1}}\\0, \text{Otherwise.}\end{aligned}\right$$ ,
+$$DP(0,r_0)=\left\lbrace\begin{aligned}1,~\text{if}~r_0=\underbrace{\cdots 111111\cdots}_{\text{all is 1}}\\0,~\text{Otherwise.}\end{aligned}\right.$$ .
 
-since this is a compatible extension, as "$0$-th" row would not protrude to $1$-th row if it takes all state 1. 
+This is a compatible extension, as "$0$-th" row would not protrude to $1$-th row if and only if it takes all state 1. 
 
+For any $i\in\lbrace 1,2,\cdots,n\rbrace$ , to calculate $DP(i,r_i)$ , a zero initialization is applied, then follows the calculation procedure:
 
-
-
-
+$$\text{Iteration}~j~\text{From}~1~\text{to}~p:DP\left(i,\left(CSP_j\right)_{s_2}\right)+=DP\left(i-1,\left(CSP_j\right)_{s_1}\right)$$
 
