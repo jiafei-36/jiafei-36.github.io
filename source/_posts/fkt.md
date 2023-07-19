@@ -126,4 +126,14 @@ Thus if we put a tile on the board, it mean we choose a pair of black and white 
 
 The amount of perfect coverage automatically transforms into the amount of perfect match of a BPG.
 
+### Permanent
+
+If the two partitons ($V_1,V_2$) of a bipartite graph $G$ have equal vertices count ($|V_1|=|V_2|=\nu$), then we can write down a Bipartite Adjacent Matrix as:
+$$BiA=\left(a_{i,j}\right)_{\nu\times\nu},a_{i,j}=\left\lbrace \begin{aligned}1,~\text{if}~v_i~\text{in}~V_1~\text{is adjacent to}~v_j~\text{in}~V2\\0,~\text{Otherwise}\end{aligned}\right.$$
+
+
+
+
+
+
 ![Directing](/images/Directional.svg)
