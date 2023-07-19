@@ -58,8 +58,7 @@ For grid at $i$-th row $j$-th column (marked as $(i,j)$):
 
 Assuming a simple extension that $(i,n+1)$ automatically transforms into $ (i+1,1)$.
 
-Apparently a legal collection of state strings $\lbrack r_1,r_2,\cdots,r_m\rbrack$ determines only one perfect coverage,
-and a perfect coverage takes a fixed collection of state strings.
+Apparently a legal collection of state strings $\lbrack r_1,r_2,\cdots,r_m\rbrack$ determines only one perfect coverage, and a perfect coverage takes a fixed collection of state strings.
 
 The last row must takes all-ones state ($r_m=\cdots 11111111 \cdots$).
 
@@ -77,11 +76,19 @@ All those compatible state string pairs can be calculated with a Deep First Sear
   + $(s_1\mid_{a_{l+1}=1},s_2\mid_{b_{l+1}=0},l+1)$ (place a vertical tile spans $i+1$-th row and $i+2$-th row).
 + for any searching state with $l=n$ rightly, record its state string pair as a compatible state pair and stop jumping to next state. (if $l=n+1$, do not record it, since it is an illegal form.)
  
-We can easily write down the searching split tree equation as $f(l)=2f(l+1)+f(l+2)+1,f(n)=1$ and a trivial transformation $f(l)+(\sqrt2-1)f(l+1)+\frac{\sqrt2}{2}=(\sqrt2+1)\left\lbrack f(l+1)+(\sqrt2-1)f(l+2)+\frac{\sqrt2}{2}\right\rbrack$ which implies the above searching algorithm has a temporal complexity of $\mathcal O\left((\sqrt2+1)^n\right)$ .
+We can easily write down the searching split tree equation as 
+
+$$f(l)=2f(l+1)+f(l+2)+1,f(n)=1$$
+
+and a trivial transformation 
+
+$$f(l)+(\sqrt2-1)f(l+1)+\frac{\sqrt2}{2}=(\sqrt2+1)\left\lbrack f(l+1)+(\sqrt2-1)f(l+2)+\frac{\sqrt2}{2}\right\rbrack$$
+
+which implies the above searching algorithm has a temporal complexity of $\mathcal O\left((\sqrt2+1)^n\right)$ .
 
 The record of all compatible string pairs is marked as $CSP=\left\lbrace(s_1,s_2)_1,(s_1,s_2)_2,(s_1,s_2)_3,\cdots,(s_1,s_2)_p\right\rbrace$ where $p$ is the amount of all compatible string pairs satisfying $p=\mathcal O \left((\sqrt2+1)^n\right)$ too.
 
-Now setting $DP(i,r_i)$ representing the amount of different perfect coverages (till $i$-th row, that is to say the $1$-th to $i$-th rows are all fulfilled with no conflicts) when $i$-th row taking state string of $r_i$.
+Now setting $DP(i,r_i)$ representing the amount of different perfect coverages (till $i$-th row, that is to say the $1$-th to $i$-th rows are all fulfilled without conflicts) when $i$-th row taking state string of $r_i$.
 
 We can initiate $DP(0,r_0)$ as:
 
@@ -93,4 +100,13 @@ For any $i\in\lbrace 1,2,\cdots,n\rbrace$ , to calculate $DP(i,r_i)$ , a zero in
 
 $$\text{Iteration}~j~\text{From}~1~\text{to}~p:DP\left(i,\left(CSP_j\right)_{s_2}\right)+=DP\left(i-1,\left(CSP_j\right)_{s_1}\right)$$
 
-Since $r_m$ must takes \underbrace{\cdots 111111\cdots}_{\text{all is 1}}, the result shall be $DP\left(m,\underbrace{\cdots 111111\cdots}_{\text{all is 1}}\right)$
+Since $r_m$ must takes $\underbrace{\cdots 111111\cdots}_{\text{all is 1}}$, the result shall be $DP\left(m,\underbrace{\cdots 111111\cdots}_{\text{all is 1}}\right)$
+
+Clearly the proposed Dynamic Programming method has a temporal complexity of $\mathcal O\left(\text{max}\lbrace m,n\rbrace(\sqrt2+1)^{\text{min}\lbrace m,n\rbrace}\right)$, which is non-polynomial.
+
+### Bipartite Planar Graph
+
+Let get back to the title, the domino tiling problem mentioned above can be parsed with another discrete mathematical model, the Graph Theory.
+
+
+
