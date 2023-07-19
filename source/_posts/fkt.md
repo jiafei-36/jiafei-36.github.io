@@ -61,7 +61,7 @@ Assuming a simple extension that $(i,n+1)$ automatically transforms into $ (i+1,
 Apparently a legal collection of state strings $\lbrack r_1,r_2,\cdots,r_m\rbrack$ determines only one perfect coverage,
 and a perfect coverage takes a fixed collection of state strings.
 
-The last row must takes all-ones state ($r_n=\cdots 11111111 \cdots$).
+The last row must takes all-ones state ($r_m=\cdots 11111111 \cdots$).
 
 To solve this, we first look into the state of two adjacent rows $r_i,r_{i+1}$:
 
@@ -85,11 +85,12 @@ Now setting $DP(i,r_i)$ representing the amount of different perfect coverages (
 
 We can initiate $DP(0,r_0)$ as:
 
-$$DP(0,r_0)=\left\lbrace\begin{aligned}1,~\text{if}~r_0=\underbrace{\cdots 111111\cdots}_{\text{all is 1}}\\0,~\text{Otherwise.}\end{aligned}\right.$$ .
+$$DP(0,r_0)=\left\lbrace\begin{aligned}1,~\text{if}~r_0=\underbrace{\cdots 111111\cdots}_{\text{all is 1}}\\0,~\text{Otherwise.}\end{aligned}\right.$$
 
-This is a compatible extension, as "$0$-th" row would not protrude to $1$-th row if and only if it takes all state 1. 
+This is a compatible extension, as "0-th" row would not protrude to $1$-th row if and only if it takes all state 1. 
 
 For any $i\in\lbrace 1,2,\cdots,n\rbrace$ , to calculate $DP(i,r_i)$ , a zero initialization is applied, then follows the calculation procedure:
 
 $$\text{Iteration}~j~\text{From}~1~\text{to}~p:DP\left(i,\left(CSP_j\right)_{s_2}\right)+=DP\left(i-1,\left(CSP_j\right)_{s_1}\right)$$
 
+Since $r_m$ must takes \underbrace{\cdots 111111\cdots}_{\text{all is 1}}, the result shall be $DP\left(m,\underbrace{\cdots 111111\cdots}_{\text{all is 1}}\right)$
