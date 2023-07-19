@@ -86,7 +86,11 @@ $$f(l)+(\sqrt2-1)f(l+1)+\frac{\sqrt2}{2}=(\sqrt2+1)\left\lbrack f(l+1)+(\sqrt2-1
 
 which implies the above searching algorithm has a temporal complexity of $\mathcal O\left((\sqrt2+1)^n\right)$ .
 
-The record of all compatible string pairs is marked as $CSP=\left\lbrace(s_1,s_2)_1,(s_1,s_2)_2,(s_1,s_2)_3,\cdots,(s_1,s_2)_p\right\rbrace$ where $p$ is the amount of all compatible string pairs satisfying $p=\mathcal O \left((\sqrt2+1)^n\right)$ too.
+The record of all compatible string pairs is marked as 
+
+$$CSP=\left\lbrace(s_1,s_2)_1,(s_1,s_2)_2,(s_1,s_2)_3,\cdots,(s_1,s_2)_p\right\rbrace$$
+
+where $p$ is the amount of all compatible string pairs satisfying $p=\mathcal O \left((\sqrt2+1)^n\right)$ too.
 
 Now setting $DP(i,r_i)$ representing the amount of different perfect coverages (till $i$-th row, that is to say the $1$-th to $i$-th rows are all fulfilled without conflicts) when $i$-th row taking state string of $r_i$.
 
@@ -98,7 +102,10 @@ This is a compatible extension, as "0-th" row would not protrude to $1$-th row i
 
 For any $i\in\lbrace 1,2,\cdots,n\rbrace$ , to calculate $DP(i,r_i)$ , a zero initialization is applied, then follows the calculation procedure:
 
-$$\text{Iteration}~j~\text{From}~1~\text{to}~p:DP\left(i,\left(CSP_j\right)_{s_2}\right)+=DP\left(i-1,\left(CSP_j\right)_{s_1}\right)$$
+
+$$\text{Iterating}~i~\text{From}~1~\text{to}~m:$$
+
+$$\text{Iterating}~j~\text{From}~1~\text{to}~p:DP\left(i,\left(CSP_j\right)_{s_2}\right)+=DP\left(i-1,\left(CSP_j\right)_{s_1}\right)$$
 
 Since $r_m$ must takes $\underbrace{\cdots 111111\cdots}_{\text{all is 1}}$, the result shall be $DP\left(m,\underbrace{\cdots 111111\cdots}_{\text{all is 1}}\right)$
 
@@ -106,7 +113,17 @@ Clearly the proposed Dynamic Programming method has a temporal complexity of $\m
 
 ### Bipartite Planar Graph
 
-Let get back to the title, the domino tiling problem mentioned above can be parsed with another discrete mathematical model, the Graph Theory.
+Let get back to the title, the domino tiling problem mentioned above can be analyzed with another discrete mathematical structure, the Graph Theory.
 
+A Bipartite Planar Graph (BPG) is a graph both bipartite and planar. Note that **biplanar** graph is not an abbreviation for BPG, as
+**biplanar** refers to another term of **thickness**.
 
+If we apply a chess board dyeing (which is black and white) to the grid board, and see each square as a graph vertex. Assuming there is an edge between two vertices if and only if the two squares they representing is adjacent in row or column.
 
+The graph constructed above is a BPG, since it can be drawn down as a planar figure, and also the black and white vertices are the two partitions.
+
+Thus if we put a tile on the board, it mean we choose a pair of black and white vertices, we make a **match**.
+
+The amount of perfect coverage automatically transforms into the amount of perfect match of a BPG.
+
+![Directing](images/Directional.svg)
