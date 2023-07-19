@@ -126,4 +126,4 @@ Thus if we put a tile on the board, it mean we choose a pair of black and white 
 
 The amount of perfect coverage automatically transforms into the amount of perfect match of a BPG.
 
-![Directing](images/Directional.svg)
+![Directing](/images/Directional.svg)
