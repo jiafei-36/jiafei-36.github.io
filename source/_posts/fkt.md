@@ -184,9 +184,20 @@ where $\tilde{\boldsymbol J}$ takes the form of:
 $$\tilde{\boldsymbol J}=\left\lbrack\begin{matrix}\boldsymbol J_{2r\times 2r}&\boldsymbol O_{2r\times(d-2r)}\\ \boldsymbol O_{(d-2r)\times2r}&\boldsymbol O_{(d-2r)\times(d-2r)}\end{matrix}\right\rbrack$$
 To prove this, assuming $\boldsymbol A_{d\times d}$ have the following form:
 
-$$\left\lbrack\begin{matrix}a_{1,1}&a_{1,2}&a_{1,3}&\cdots&a_{1,d}\\ a_{2,1}&a_{2,2}&a_{2,3}&\cdots&a_{2,d}\\ a_{3,1}&a_{3,2}&\ddots&\cdots&\cdots\\ \vdots&\vdots&\vdots&\ddots& \\ a_{d,1}&a_{d,2}&\vdots&&\ddots \end{matrix}\right\rbrack$$
+$$\boldsymbol A_{d\times d}=\left\lbrack\begin{matrix}a_{1,1}&a_{1,2}&a_{1,3}&\cdots&a_{1,d}\\ a_{2,1}&a_{2,2}&a_{2,3}&\cdots&a_{2,d}\\ a_{3,1}&a_{3,2}&\ddots&\cdots&\cdots\\ \vdots&\vdots&\vdots&\ddots& \\ a_{d,1}&a_{d,2}&\vdots&&\ddots \end{matrix}\right\rbrack=\left\lbrack\begin{matrix}\boldsymbol U_{2\times 2}&\boldsymbol W\\ \boldsymbol -W^T&\boldsymbol V_{(d-2)\times (d-2)}\end{matrix}\right\rbrack$$
 
+Let $\boldsymbol Q$ be an elementary operation of row (of course invertible), thus $\boldsymbol Q^T$ will be a corresponding column operation. Simultanous apply $\boldsymbol Q$ and $\boldsymbol Q^T$ to an antisymmetric matrix would not break the property of antisymmetry.
 
+Since the rank of an antisymmetric would not be $1$, we could alway reorder the indices (the reorder operation can also be treated with form $\boldsymbol Q^T\boldsymbol A\boldsymbol Q$ where $\boldsymbol Q$ is invertible) such that $\text{rank}(\boldsymbol U)=2$ until $\boldsymbol A=\boldsymbol O$.
+
+Because $\text{rank}(\boldsymbol A)\geq\text{rank}(\boldsymbol V)$, so we can apply series of paired elementary operations such that :
+$$(\boldsymbol Q\cdots)^T\boldsymbol A\boldsymbol (Q\cdots)=\left\lbrack\begin{matrix}\boldsymbol U'_{2\times 2}&\boldsymbol O_{2\times (d-2)}\\ \boldsymbol O_{(d-2)\times 2}&\boldsymbol V'_{(d-2)\times (d-2)}\end{matrix}\right\rbrack$$
+
+and then scale $V'$ to $\left(\begin{matrix}0&1\\-1&0\end{matrix}\right)$:
+
+$$(\boldsymbol Q\cdots)^T\boldsymbol A\boldsymbol (Q\cdots)=\left\lbrack\begin{matrix}0&1&0&\cdots&0\\ -1&0&0&\cdots&0\\ 0&0&\ddots&\cdots&\cdots\\ \vdots&\vdots&\vdots&\ddots& \\ 0&0&\vdots&&\ddots \end{matrix}\right\rbrack$$
+
+With this result, the original statement is proved recursively.
 
 
 ![Directing](/images/Directional.svg)
