@@ -73,7 +73,7 @@ All those compatible state string pairs can be calculated with a Deep First Sear
 + We define the searching state as $(s_1,s_2,l)$ where $l\in\lbrace 0,1,\cdots,n\rbrace$. Assuming $s_1=a_1a_2a_3\cdots a_n,s_2=b_1b_2b_3\cdots b_n$, $l$ denotes that $a_1a_2\cdots a_l$ and $b_1b_2\cdots b_l$ is determined, while $a_{l+1}a_{l+2}\cdots a_n$ and $b_{l+1}b_{l+2}\cdots b_n$ remain undetermined;
 + We start from state $(X,X,0)$ (since $l=0$ implies no state is determined, we use $X$ denotes a casual state);
 + When it cames to state $(s_1=a_1a_2\cdots a_n,s_2=b_1b_2\cdots b_n,l)$ the next hops are:
-  + $(s_1\mid_{a_{l+1}=1,a_{l+2}=1},s_2\mid_{b_{l+1}=1,b_{l+2}=1},l+2)$ (If we put a horizontal tile at $i+1$-th row spans $l+1$-th column and $l+2$-th column ,then $a_{i+1}$ and $a_{i+2}$ must not take $0$ ,or the vertical tile will protrude into the horizontal one) ;
+  + $(s_1\mid_{a_{l+1}=1,a_{l+2}=1},s_2\mid_{b_{l+1}=1,b_{l+2}=1},l+2)$ (If we put a horizontal tile at $i+1$-th row spans $l+1$-th column and $l+2$-th column , then $a_{i+1}$ and $a_{i+2}$ must not take $0$ , or the vertical tile will protrude into the horizontal one) ;
   + $(s_1\mid_{a_{l+1}=0},s_2\mid_{b_{l+1}=1},l+1)$ (place a vertical tile spans $i$-th row and $i+1$-th row) ;
   + $(s_1\mid_{a_{l+1}=1},s_2\mid_{b_{l+1}=0},l+1)$ (place a vertical tile spans $i+1$-th row and $i+2$-th row).
 + for any searching state with $l=n$ rightly, record its state string pair as a compatible state pair and stop jumping to next state. (if $l=n+1$, do not record it, since it is an illegal form.)
@@ -151,11 +151,11 @@ We can compute determinat with **Gaussian Elimination** in $\mathcal O(n^3)$, bu
 
 ### Pfaffian
 
-Now we abandon the bipartite adjacency matrix and return to the normal adjacency matrix. The perfect match amount for a $n,n$-bipartite graph is given by:
+Now we abandon the bipartite adjacency matrix and return to the normal adjacency matrix $\boldsymbol A$. The perfect match amount for a $n,n$-bipartite graph is given by:
 
-$$\text{PerfectMatch}(G)=\frac{1}{2^nn!}\sum\limits_{\sigma\in S_{2n}}\prod\limits_{i=1}^na_{\sigma(2i-1),\sigma(2i)}$$
+$$\text{PerfectMatch}(\boldsymbol A)=\frac{1}{2^nn!}\sum\limits_{\sigma\in S_{2n}}\prod\limits_{i=1}^na_{\sigma(2i-1),\sigma(2i)}$$
 
-However, since it is bipartite, we can reorder the vertices of $V=V_1\cup V_2$ such that the $1$-th till $n$-th vertices belong to $V_1$ and $n+1$-th till $2n$-th vertices belong to $V_2$. Under the new order,the adjacency martix takes the form of:
+However, since it is bipartite, we can reorder the vertices of $V=V_1\cup V_2$ such that the $1$-th till $n$-th vertices belong to $V_1$ and $n+1$-th till $2n$-th vertices belong to $V_2$. Under the new order, the adjacency martix takes the form of:
 
 $$\left\lbrack\begin{matrix}\boldsymbol O&\boldsymbol{BiA}\\ \boldsymbol{BiA}^T&O\end{matrix}\right\rbrack$$
 
@@ -177,9 +177,9 @@ At first, we prove that for an even-dimentional complex invertible antisymmetric
 
 $$\boldsymbol A=\boldsymbol P^T\boldsymbol J\boldsymbol P$$
 where $\boldsymbol J_{2n\times 2n}$ is given by:
-$$\boldsymbol J=\text{diag}\left\lbrack\underbrace{\left(\begin{matrix}0&1\\-1&0\end{matrix}\right),\left(\begin{matrix}0&1\\-1&0\end{matrix}\right),\cdots,\left(\begin{matrix}0&1\\-1&0\end{matrix}\right)}_{n}\right\rbrack$$
+$$\boldsymbol J=\text{diag}\left\lbrack\underbrace{\left(\begin{matrix}0&1\\ -1&0\end{matrix}\right),\left(\begin{matrix}0&1\\-1&0\end{matrix}\right),\cdots,\left(\begin{matrix}0&1\\-1&0\end{matrix}\right)}_{n}\right\rbrack$$
 and for non-even or singular-even $A_{d\times d}$ case, there also exists an invertible matrix $\boldsymbol P$ such that:
-$$\boldsymbol A=\boldsymbol P^T\tilde{\boldsymbol J}P$$
+$$\boldsymbol A=\boldsymbol P^T\tilde{\boldsymbol J}\boldsymbol A)P$$
 where $\tilde{\boldsymbol J}$ takes the form of:
 $$\tilde{\boldsymbol J}=\left\lbrack\begin{matrix}\boldsymbol J_{2r\times 2r}&\boldsymbol O_{2r\times(d-2r)}\\ \boldsymbol O_{(d-2r)\times2r}&\boldsymbol O_{(d-2r)\times(d-2r)}\end{matrix}\right\rbrack$$
 To prove this, assuming $\boldsymbol A_{d\times d}$ have the following form:
@@ -198,6 +198,23 @@ and then scale $V'$ to $\left(\begin{matrix}0&1\\-1&0\end{matrix}\right)$:
 $$(\boldsymbol Q\cdots)^T\boldsymbol A\boldsymbol (Q\cdots)=\left\lbrack\begin{matrix}0&1&0&\cdots&0\\ -1&0&0&\cdots&0\\ 0&0&\ddots&\cdots&\cdots\\ \vdots&\vdots&\vdots&\ddots& \\ 0&0&\vdots&&\ddots \end{matrix}\right\rbrack$$
 
 With this result, the original statement is proved recursively.
+
+Now we can write down that $\text{det}(\boldsymbol A)=\text{det}(\boldsymbol P^T\boldsymbol J\boldsymbol P)=\text{det}^2(\boldsymbol P)\text{det}(J)=\text{det}^2(\boldsymbol P)$.
+
+While term $a_{i,j}$ can be written as:
+
+$$\begin{aligned}a_{i,j}&=\sum\limits_{k=1}^{2n}\sum\limits_{l=1}^{2n}(p^T)_{i,k}j_{k,l}p{l,j}=\sum\limits_{k=1}^{2n}\sum\limits_{l=1}^{2n}p_{k,i}j_{k,l}p{l,j}\\ &=\sum\limits_{k=1}^n\left(p_{2k-1,i}p_{2k,j}-p_{2k,i}p_{2k-1,j}\right)\end{aligned}$$
+
+
+
+
+
+
+
+
+
+
+
 
 
 ![Directing](/images/Directional.svg)
