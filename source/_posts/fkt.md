@@ -159,9 +159,31 @@ However, since it is bipartite, we can reorder the vertices of $V=V_1\cup V_2$ s
 
 $$\left\lbrack\begin{matrix}\boldsymbol O&\boldsymbol{BiA}\\ \boldsymbol{BiA}^T&O\end{matrix}\right\rbrack$$
 
-The bipartite adjacency matrix returns again. Clearly we have $\text{perm}(\boldsymbol A)=\text{perm}(\boldsymbol{BiA})^2$ (for any two additive terms $\prod\limits_{i=1}^na_{i,\sigma_1(i)}$ and $\prod\limits_{i=1}^na_{i,\sigma_2(i)}$ in $\text{perm}(\boldsymbol{BiA})$, there exists additive term $\left(\prod\limits_{i=1}^na_{i,\sigma_s(i)}\right)^2$ and $\prod\limits_{i=1}^na_{i,\sigma_1(i)}\cdot\prod\limits_{i=1}^na_{i,\sigma_2(i)}$ in $\text{perm}(\boldsymbol A)$).
+The bipartite adjacency matrix returns again. Clearly we have $\text{perm}(\boldsymbol A)=\text{perm}(\boldsymbol{BiA})^2$ (for any two additive terms $\prod\limits_{i=1}^na_{i,\sigma_1(i)}$ and $\prod\limits_{i=1}^na_{i,\sigma_2(i)}$ in $\text{perm}(\boldsymbol{BiA})$, there exists additive terms $\left(\prod\limits_{i=1}^na_{i,\sigma_s(i)}\right)^2$ for $s\in\lbrace 1,2\rbrace$ and two $\left(\prod\limits_{i=1}^na_{i,\sigma_1(i)}\cdot\prod\limits_{i=1}^na_{i,\sigma_2(i)}\right)$ in $\text{perm}(\boldsymbol A)$).
 
 Here we introduce the **Pfaffian**.
 
-We 
+Consider an even-dimensional antisymmetric matrix $\boldsymbol A=(a_{i,j})_{2n\times 2n}$ ($\boldsymbol A+\boldsymbol A^T=\boldsymbol O$), the pfaffian of A is given by:
+
+$$\text{pf}(\boldsymbol A)=\frac{1}{2^nn!}\sum\limits_{\sigma\in S_{2n}}\text{sgn}(\sigma)\prod\limits_{i=1}^na_{\sigma(2i-1),\sigma(2i)}$$
+
+This looks a bit familiar, it differs from perfect match amount only by a signature factor on each additive term.
+
+We can prove that $\text{pf}^2(\boldsymbol A)=\text{det}(\boldsymbol A)$:
+
+#### Prove
+
+At first, we prove that for an even-dimentional complex invertible antisymmetric matrix $\boldsymbol A_{2n\times 2n}$, there exist an invertible matrix $\boldsymbol P$ such that:
+
+$$\boldsymbol  A=\boldsymbol P^T\boldsymbol J\boldsymbol P$$
+where $\boldsymbol J_{2n\times 2n}$ is given by:
+$$\boldsymbol J=\text{diag}\left\lbrack\underbrace{\left(\begin{matrix}0&1\\-1&0\end{matrix}\right),\left(\begin{matrix}0&1\\-1&0\end{matrix}\right),\cdots,\left(\begin{matrix}0&1\\-1&0\end{matrix}\right)}_{n}\right\rbrack$$
+and for non-even or singular even $A$ case, also exists an invertible matrix $\boldsymbol P$ such that:
+
+
+
+
+
+
+
 ![Directing](/images/Directional.svg)
