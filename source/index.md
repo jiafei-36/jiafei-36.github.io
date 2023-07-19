@@ -32,11 +32,3 @@ Github: [pscgylotti](https://github.com/Pscgylotti) <i class="fa-brands fa-githu
 * Rekursiv and Logic Theory <i class="fa fa-diagram-venn"></i>
 * Graph and Bayesian-Statistics based Society Cognition <i class="fa fa-circle-nodes"></i>
 * Spatial-Temporal-Hierarchical Physical Universe Cognition <i class="fa fa-atom"></i>
-
-{% raw %}
-<style>
-  .post-body{
-    font-family: cursive;
-  }
-</style>
-{%  endraw %}
