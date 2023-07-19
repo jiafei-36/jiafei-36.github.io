@@ -215,7 +215,7 @@ The zero outcome is derived by noting that if we swap $i_1$ and $i_3$ or $i_2$ a
 
 So all the $k$ inside each factor shall be different in order to avoid vanishing inside the summation. It follows that:
 
-$$\begin{aligned}\text{pf}(\boldsymbol A)&=\frac{1]{2^nn!}\sum\limits_{\sigma\in S_{2n}}\text{sgn}(\sigma)\prod\limits_{s=1}^n\left(p_{2i-1,i_{2i-1}}p_{2i,i_{2i}}-p_{2i-1,i_{2i}}p_{2i,i_{2i-1}}\right)\\ &=\sum\limits_{1\leq i_1,i_2,\cdots,i_{2n}\leq 2n}\varepsilon_{i_1i_2\cdots i_{2n}}\prod\limits_{j=1}^{2n}p_{j,i_j}\\ &=\text{det}\boldsymbol P\end{aligned}$$
+$$\begin{aligned}\text{pf}(\boldsymbol A)&=\frac{1}{2^nn!}\sum\limits_{\sigma\in S_{2n}}\text{sgn}(\sigma)\prod\limits_{s=1}^n\left(p_{2i-1,i_{2i-1}}p_{2i,i_{2i}}-p_{2i-1,i_{2i}}p_{2i,i_{2i-1}}\right)\\ &=\sum\limits_{1\leq i_1,i_2,\cdots,i_{2n}\leq 2n}\varepsilon_{i_1i_2\cdots i_{2n}}\prod\limits_{j=1}^{2n}p_{j,i_j}\\ &=\text{det}\boldsymbol P\end{aligned}$$
 
 
 
