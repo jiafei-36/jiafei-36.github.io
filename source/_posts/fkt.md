@@ -257,5 +257,29 @@ For both states, a half of the edges are chosen and because of the double-odd pr
 
 Also, this property of single even cycle can be easily extended to conjunction of them.
 
+This orientation is **Pfaffian Orientation**, we provide an intuitive description above, and now we try to prove that it keeps the signature of all additive terms all-same rigorously.
+
+#### Pfaffian Orientation
+
+
+#### FKT Procedure
+
+The Fisher-Kasteleyn-Temperley Algorithm procedure is given by:
+1. Compute a planar embedding of $G$;
+2. Compute a spanning tree $T_1$ of $G$;
+3. Given an arbitrary orientation to each edge of $T_1$ (also to corresponding edge in $G$);
+4. Create another undirected graph $T_2$ whose vertex set is same as the dual graph (face-to-vertex) of $G$ and initial edge set is empty;
+5. Add an edge to $T_2$ if two faces of $T_2$ share an edge in $G$ which is not in $T_1$ (now $T_2$ is a tree, otherwise a cycle of $T_2$ will enclose an isolated area of $G$ which is not connected to $T_1$);
+6. For each leaf v in $T_2$:
+   + let $e$ be the lone edge of $G$ in the face $v$ which is yet undirected;
+   + Give $e$ an orientation to ensure double-odd property of face $v$ (which is an even cycle);
+   + Remove $v$ from $T_2$;
+7. Return the value of the arithmetic square root of the determinant of the directional adjacency matrix.
+
+### Return to Domino Tiling
+
+We can now using **FKT-Algorithm** compute the domino tiling problem efficiently with temporal complexity of $\mathcal O\left((mn)^3\right)$, here is a simple pfaffian orientation of the tiling graph:
 
 ![Directing](/images/Directional.svg)
+
+But this is not enough for getting a close-form solution.
