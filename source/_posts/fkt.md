@@ -137,13 +137,13 @@ $$\boldsymbol{BiA}=\left(a_{i,j}\right)_{\nu\times\nu},a_{i,j}=\left\lbrace \beg
 
 We know that a determinat of a square matrix $\boldsymbol A=(a_{i,j})_{n\times n}$ is given by:
 
-$$\text{det}(\boldsymbol A)=\sum\limits_{\sigma\in S_n}\prod\limits_{i=1}^n(-1)\text{sgn} (\sigma) a_{i,\sigma(i)}$$
+$$\text{det}(\boldsymbol A)=\sum\limits_{\sigma\in S_n}\prod\limits_{i=1}^n\text{sgn} (\sigma) a_{i,\sigma(i)}$$
 
 where $S_{n}$ represents the full permutation of $\lbrace 1,2,\cdots,n\rbrace$ .
 
 However, if we remove the term of signature, we will get:
 
-$$\text{perm}(\boldsymbol A)=\sum\limits_{\sigma\in S_n}\prod\limits_{i=1}^n(-1) a_{i,\sigma(i)}$$
+$$\text{perm}(\boldsymbol A)=\sum\limits_{\sigma\in S_n}\prod\limits_{i=1}^n a_{i,\sigma(i)}$$
 
 This is the so-called **Permanent**. For a Bipartite Adjacency Matrix $\boldsymbol{BiA}$, the perfect match number is equal to its permanet $perm(\boldsymbol{BiA})$.
 
