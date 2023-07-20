@@ -208,7 +208,7 @@ While term $a_{i,j}$ can be written as:
 
 $$\begin{aligned}a_{i,j}&=\sum\limits_{k=1}^{2n}\sum\limits_{l=1}^{2n}(p^T)_{i,k}j_{k,l}p_{l,j}=\sum\limits_{k=1}^{2n}\sum\limits_{l=1}^{2n}p_{k,i}j_{k,l}p_{l,j}\\ &=\sum\limits_{k=1}^n\left(p_{2k-1,i}p_{2k,j}-p_{2k,i}p_{2k-1,j}\right)\end{aligned}$$
 
-Consider the property of one single additive term with form $p_{2k-1,i}p_{2k,j}-p_{2k,i}p_{2k-1,j}$ inside the pfaffian summation definition, then each additive term with form $p_{2k-1,i}p_{2k,j}-p_{2k,i}p_{2k-1,j}$ especially for a fixed $k$ inside the production will take the form like (here we detect what will happen when two factors in the production have the same k):
+Consider the property of one single additive term with form $p_{2k-1,i}p_{2k,j}-p_{2k,i}p_{2k-1,j}$ inside the pfaffian summation definition, then each additive term with form $p_{2k-1,i}p_{2k,j}-p_{2k,i}p_{2k-1,j}$ especially for a fixed $k$ inside the product will take the form like (here we detect what will happen when two factors in the product have the same k):
 
 $$\begin{aligned}\sum\limits_{\sigma\in S_{2n}}&\text{sgn}(\sigma)\left(p_{2k-1,i_1}p_{2k,i_2}-p_{2k-1,i_2}p_{2k,i_1}\right)\left(p_{2k-1,i_3}p_{2k,i_4}-p_{2k-1,i_4}p_{2k,i_3}\right)\\ &\left(p_{2k_3-1,i_5}p_{2k_3,i_6}-p_{2k_3-1,i_6}p_{2k_3,i_5}\right)\times\cdots\times\left(p_{2k_n-1,i_{2n-1}}p_{2k_n,i_{2n}}-p_{2k_n-1,i_{2n}}p_{2k_n,i_{2n-1}}\right)\\ =0\end{aligned}$$
 
@@ -327,10 +327,21 @@ $$\frac{\text{sgn}(\sigma_2)\omega(\sigma_2)}{\text{sgn}(\sigma_1)\omega(\sigma_
 That is to say
 $$|\text{det}(\boldsymbol B)|= \text{perm}(\boldsymbol B)=\text{PerfectMatch}(G)=f(m,n)$$
 
+Let $V$ be the space of functions $f:\mathbb Z^2\to\mathbb C$ such that 
+$$f(x,-y)=f(-x,y)=-f(x,y)$$
+and
+$$f(x+2(m+1),y)=f(x,y+2(n+1))=f(x,y)$$
+for all $x,y\in\mathbb Z$. Note that for such a function $f$, $f(x,y)$ vanishies if either $x$ is a multiple of $m+1$ or y is a multiple of $n+1$. Let $L:V\to V$ be the modified local summation operator 
+$$(Lf)(x,y)=f(x-1,y)+f(x+1,t)+if(x,y-1)+if(x,y+1)$$
+$V$ is isomorphic to $\mathbb C^{mn}$ (restrict f:\mathbb Z^2\to\mathbb C to \lbrace 1,\cdots,m\rbrace\times\lbrace 1,\cdots,n\rbrace), and the $mn\times mn$ matrix that intertwines the action of $L$ under this automorphism is $\tilde{\boldsymbol A}$. Hence $\text{det}\tilde{\boldsymbol A}$ is the product of the eigenvalues of $L$. 
+While the basis for V is given by the function:
+$$f_{j,k}(x,y)=\sin\frac{\pi j x}{m+1}\sin\frac{\pi k y}{n+1},(1\leq j\leq m,1\leq k\leq n)$$
+It is easy to check that these are eigenfunctions of $L$:
+$$\begin{aligned}(Lf_{j,k})(x,y)&=\left(\sin\frac{\pi j(x-1)}{m+1}+\sin\frac{\pi j(x+1)}{m+1}\right)\sin\frac{\pi k y}{n+1}\\ &+i\sin\frac{\pi jx}{m+1}\left(\sin\frac{\pi k(y-1)}{n+1}+\sin\frac{\pi k(y+1)}{n+1}\right)\end{aligned}$$
+### References
 
+[Wikipedia FKT-Algorithm](https://en.wikipedia.org/wiki/FKT_algorithm)
 
+[Dimers and Dominoes](https://arxiv.org/abs/1405.2615)
 
-
-
-
-
+[Notes on antisymmetric matrices and the pfaffian](http://eik.bme.hu/~palyi/topins2-2016spring/pfaffian.pdf)
