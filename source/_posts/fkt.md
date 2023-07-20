@@ -337,7 +337,7 @@ $V$ is isomorphic to $\mathbb C^{mn}$ (restrict $f:\mathbb Z^2\to\mathbb C$ to $
 While the basis for V is given by the function:
 $$f_{j,k}(x,y)=\sin\frac{\pi j x}{m+1}\sin\frac{\pi k y}{n+1},(1\leq j\leq m,1\leq k\leq n)$$
 It is easy to check that these are eigenfunctions of $L$:
-$$\begin{aligned}(Lf_{j,k})(x,y)&=\left(\sin\frac{\pi j(x-1)}{m+1}+\sin\frac{\pi j(x+1)}{m+1}\right)\sin\frac{\pi k y}{n+1}\\ &+i\sin\frac{\pi jx}{m+1}\left(\sin\frac{\pi k(y-1)}{n+1}+\sin\frac{\pi k(y+1)}{n+1}\right)\\ &=2\left(\cos\frac{\pi j}{m+1}+i\cos\frac{\pi k}{n+1}\right)\end{aligned}$$
+$$\begin{aligned}(Lf_{j,k})(x,y)&=\left(\sin\frac{\pi j(x-1)}{m+1}+\sin\frac{\pi j(x+1)}{m+1}\right)\sin\frac{\pi k y}{n+1}\\ &+i\sin\frac{\pi jx}{m+1}\left(\sin\frac{\pi k(y-1)}{n+1}+\sin\frac{\pi k(y+1)}{n+1}\right)\\ &=2\left(\cos\frac{\pi j}{m+1}+i\cos\frac{\pi k}{n+1}\right)f_{j,k}(x,y)\end{aligned}$$
 So
 $$\text{det}(\tilde{\boldsymbol A})=\prod\limits_{j=1}^m\prod\limits_{k=1}^n\left(2\cos\frac{\pi j}{m+1}+2i\cos\frac{\pi k}{n+1}\right)$$
 Assuming $n$ is even while $m$ is arbitrary, we have:
