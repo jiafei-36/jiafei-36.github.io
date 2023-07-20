@@ -337,7 +337,26 @@ $V$ is isomorphic to $\mathbb C^{mn}$ (restrict f:\mathbb Z^2\to\mathbb C to \lb
 While the basis for V is given by the function:
 $$f_{j,k}(x,y)=\sin\frac{\pi j x}{m+1}\sin\frac{\pi k y}{n+1},(1\leq j\leq m,1\leq k\leq n)$$
 It is easy to check that these are eigenfunctions of $L$:
-$$\begin{aligned}(Lf_{j,k})(x,y)&=\left(\sin\frac{\pi j(x-1)}{m+1}+\sin\frac{\pi j(x+1)}{m+1}\right)\sin\frac{\pi k y}{n+1}\\ &+i\sin\frac{\pi jx}{m+1}\left(\sin\frac{\pi k(y-1)}{n+1}+\sin\frac{\pi k(y+1)}{n+1}\right)\end{aligned}$$
+$$\begin{aligned}(Lf_{j,k})(x,y)&=\left(\sin\frac{\pi j(x-1)}{m+1}+\sin\frac{\pi j(x+1)}{m+1}\right)\sin\frac{\pi k y}{n+1}\\ &+i\sin\frac{\pi jx}{m+1}\left(\sin\frac{\pi k(y-1)}{n+1}+\sin\frac{\pi k(y+1)}{n+1}\right)\end{aligned}\\&=2\left(\cos\frac{\pi j}{m+1}+i\cos\frac{\pi k}{n+1}\right)$$
+So
+$$\text{det}(\tilde{\boldsymbol A})=\prod\limits_{j=1}^m\prod\limits_{k=1}^n\left(2\cos\frac{\pi j}{m+1}+2i\cos\frac{\pi k}{n+1}\right)$$
+Assuming $n$ is even while $m$ is arbitrary, we have:
+$$\text{det}(\tilde{\boldsymbol A})=\prod\limits_{j=1}^m\prod\limits_{k=1}^{\frac{n}2}\left(4\cos^2\frac{\pi j}{m+1}+4\cos^2\frac{\pi k}{n+1}\right)$$
+Since the $j$ and $m+1-j$ factors are equal, while we want to get $f(m,n)=\sqrt{\text{det}(\tilde{\boldsymbol A})}$
+$$f(m,n)=\prod\limits_{j=1}^{\lceil\frac{m}{2}\rceil}\prod\limits_{k=1}^{\frac{n}2}\left(4\cos^2\frac{\pi j}{m+1}+4\cos^2\frac{\pi k}{n+1}\right)$$
+The above holds since it can be examined that for odd $m=2t+1$ and $n=2s$
+$$\prod\limits_{k=1}^{s}\left(4\cos^2\frac{\pi \lceil\frac{m}2\rceil}{m+1}+4\cos^2\frac{\pi k}{n+1}\right)=4^s\prod\limits_{k=1}^{s}\left(\cos^2\frac{\pi k}{2s+1}\right)=1$$
+where
+$$\prod\limits_{k=1}^{s}(\cos\frac{\pi k}{2s+1})=\dfrac{\prod\limits_{k=1}^{s}(\sin\frac{\pi k}{2s+1}\cos\frac{\pi k}{2s+1})}{\prod\limits_{k=1}^{s}(\sin\frac{\pi k}{2s+1})}=\frac{1}{2^s}\dfrac{\prod\limits_{k=1}^{s}(\sin\frac{2\pi k}{2s+1})}{\prod\limits_{k=1}^{s}(\sin\frac{\pi k}{2s+1})}=\frac{1}{2^s}$$
+In fact, the following extended equation still holds when $2\nmid mn$ for it gives the zero result
+$$f(m,n)=\prod\limits_{j=1}^{\lceil\frac{m}{2}\rceil}\prod\limits_{k=1}^{\lceil\frac{n}2\rceil}\left(4\cos^2\frac{\pi j}{m+1}+4\cos^2\frac{\pi k}{n+1}\right)$$
+
+We can analysis $f(n,n)$ when $n$ is even through:
+
+$$\frac{1}{n^2}\log f(n,n)~\to~\frac12\int_0^1\int_0^1\log(2\cos\pi s+2i\cos\pi t)ds dt$$
+
+Where the integrate evaluates to $\frac{G}{\pi}$ , where $G$ is Catalan's constant equals $\sum\limits_{n=1}^{+\infty}\frac{(-1)^n}{(2n-1)^2}$. And the $f(n,n)$ approximation is:
+$$f(n,n)=\left(e^{\frac{G}{\pi}}\right)^{n^2}\approx 1.3385^{n^2}$$
 ### References
 
 [Wikipedia FKT-Algorithm](https://en.wikipedia.org/wiki/FKT_algorithm)
