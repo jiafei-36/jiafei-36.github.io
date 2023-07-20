@@ -332,7 +332,7 @@ $$f(x,-y)=f(-x,y)=-f(x,y)$$
 and
 $$f(x+2(m+1),y)=f(x,y+2(n+1))=f(x,y)$$
 for all $x,y\in\mathbb Z$. Note that for such a function $f$, $f(x,y)$ vanishies if either $x$ is a multiple of $m+1$ or y is a multiple of $n+1$. Let $L:V\to V$ be the modified local summation operator 
-$$(Lf)(x,y)=f(x-1,y)+f(x+1,t)+if(x,y-1)+if(x,y+1)$$
+$$(Lf)(x,y)=f(x-1,y)+f(x+1,y)+if(x,y-1)+if(x,y+1)$$
 $V$ is isomorphic to $\mathbb C^{mn}$ (restrict $f:\mathbb Z^2\to\mathbb C$ to $\lbrace 1,\cdots,m\rbrace\times\lbrace 1,\cdots,n\rbrace$), and the $mn\times mn$ matrix that intertwines the action of $L$ under this automorphism is $\tilde{\boldsymbol A}$. Hence $\text{det}\tilde{\boldsymbol A}$ is the product of the eigenvalues of $L$. 
 While the basis for V is given by the function:
 $$f_{j,k}(x,y)=\sin\frac{\pi j x}{m+1}\sin\frac{\pi k y}{n+1},(1\leq j\leq m,1\leq k\leq n)$$
