@@ -303,8 +303,8 @@ Let $\boldsymbol B$ be the bipartite adjacency matrix of graph $G$, we define $\
 
 $$\boldsymbol A=\left\lbrack\begin{matrix}\boldsymbol O&\boldsymbol B\\ \boldsymbol B^T&\boldsymbol O\end{matrix}\right\rbrack,\tilde{\boldsymbol A}=\left\lbrack\begin{matrix}\boldsymbol O&\tilde{\boldsymbol B}\\ \tilde{\boldsymbol B}^T&\boldsymbol O\end{matrix}\right\rbrack$$
 
-Assuming we have a $3\times 2$ grid board and its graph $G$. Here is an example for \tilde{\boldsymbol B} (the left part shows how we index the vertices):
-$$\begin{matrix}1&4\\ 5&2\\ 3&6\end{matrix},\tilde{\boldsymbol B}=\left\lbrack\begin{matrix}1&i&0\\ i&1&i\\ 0&i&1\end{matrix}\right\rbrack$$
+Assuming we have a $3\times 2$ grid board and its graph $G$. Here is an example for $\tilde{\boldsymbol B}$ (the left part shows how we index the vertices):
+$$\left|\begin{matrix}1&4\\ 5&2\\ 3&6\end{matrix}\right|,\tilde{\boldsymbol B}=\left\lbrack\begin{matrix}1&i&0\\ i&1&i\\ 0&i&1\end{matrix}\right\rbrack$$
 First we need to show that $\text{det}(\tilde{\boldsymbol B})=\pm f(m,n)$. Here we also need to prove that the signature of every additive term of the determinant summation keeps all same. Label the vertices of two partitions separately from $0$ to $\frac{mn}2$ , so that every perfect match now corresponds to a permutation of $\lbrace 1,\cdots,\frac{mn}{2}\rbrace$ without redundant (form a permanent on the $\boldsymbol B$ instead of a pfaffian on $\boldsymbol A$). $+1$ represents a horizontal edge in $\boldsymbol B$ and $+i$ for a vertical one. The signature of an additive term equals $\text{sgn}(\sigma)\omega(\sigma)$ , where $\omega(\sigma)=\prod\limits_{j=1}^{\frac{mn}{2}}b_{j,\sigma_j}$.
 
 We need to show for any different permutations (also perfect match) $\sigma_1,\sigma_2$ , it holds that:
