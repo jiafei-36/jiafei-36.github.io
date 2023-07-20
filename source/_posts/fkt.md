@@ -320,7 +320,7 @@ However, we have $(i)^{2}=(i)^{-2}=-1$ , so in fact
 $$\frac{\omega(\sigma_1)}{\omega(\sigma_2)}=\prod\limits_{j=1}^r(-1)^{A(C_j)}=(-1)^{\sum\limits_{j=1}^rA(C_j)}$$
 where $A(C)$ is the area of $C$ (set the area of a regular square as $1$).
 We have Pick's Theorem which states that $A(C)=I(C)+\frac12B(C)-1$ on gird board, where $I(C)$ is the amount of interior points of $C$ and $B(C)$ is the amount of points on the boundary of $C$. Here $I(C)$ must be even or otherwise the interior part cut down by $C$ could not have a perfect match. Meanwhile, $\frac12B(C)$ is in fact $l$, so
-$$A(C)\equiv l(C)-1(\text{mod} 2),\frac{\omega(\sigma_1)}{\omega(\sigma_2)}=(-1)^{\sum\limits_{j=1}^rl_j-1}=(-1)^{\frac{mn}2-r}$$
+$$A(C)\equiv l(C)-1~(\text{mod} ~2),\frac{\omega(\sigma_1)}{\omega(\sigma_2)}=(-1)^{\sum\limits_{j=1}^rl_j-1}=(-1)^{\frac{mn}2-r}$$
 
 At last, we have 
 $$\frac{\text{sgn}(\sigma_2)\omega(\sigma_2)}{\text{sgn}(\sigma_1)\omega(\sigma_1)}=(-1)^{\frac{mn}2+r+\frac{mn}2+-r}=(-1)^{mn}=1$$
