@@ -317,7 +317,7 @@ Note that we are working on a gird board, so the cycles are in fact taking the f
 $$\frac{\omega(\sigma_1)}{\omega(\sigma_2)}=\prod\limits_{j=1}^rd(\Gamma({C_j}))$$
 Also $d(\Gamma(C))=\sum\limits_{j=1}^s\Gamma(c_j)$ where $c_1,c_2,\cdots,c_s$ are the $s$ squares on the grid board which consist $C$ (imagine that the flows on their common edges diminish each other). If we set $\Gamma$ as counter-clockwise, and set the color of a square $c$ same as the color of the vertex at its top-left. Then for a black square $c_1$ and a white square $c_2$ we have $d(\Gamma(c_1))=2,d(\Gamma(c_2))=-2$.
 However, we have $(i)^{2}=(i)^{-2}=-1$ , so in fact 
-$$\frac{\omega(\sigma_1)}{\omega(\sigma_2)}=\prod\limits_{j=1}^r(-1)^(A(C_j))=(-1)^{\sum\limits_{j=1}^rA(C_j)}$$
+$$\frac{\omega(\sigma_1)}{\omega(\sigma_2)}=\prod\limits_{j=1}^r(-1)^{A(C_j)}=(-1)^{\sum\limits_{j=1}^rA(C_j)}$$
 where $A(C)$ is the area of $C$ (set the area of a regular square as $1$).
 We have Pick's Theorem which states that $A(C)=I(C)+\frac12B(C)-1$ on gird board, where $I(C)$ is the amount of interior points of $C$ and $B(C)$ is the amount of points on the boundary of $C$. Here $I(C)$ must be even or otherwise the interior part cut down by $C$ could not have a perfect match. Meanwhile, $\frac12B(C)$ is in fact $l$, so
 $$A(C)\equiv l(C)-1(\text{mod} 2),\frac{\omega(\sigma_1)}{\omega(\sigma_2)}=(-1)^{\sum\limits_{j=1}^rl_j-1}=(-1)^{\frac{mn}2-r}$$
@@ -337,7 +337,7 @@ $V$ is isomorphic to $\mathbb C^{mn}$ (restrict f:\mathbb Z^2\to\mathbb C to \lb
 While the basis for V is given by the function:
 $$f_{j,k}(x,y)=\sin\frac{\pi j x}{m+1}\sin\frac{\pi k y}{n+1},(1\leq j\leq m,1\leq k\leq n)$$
 It is easy to check that these are eigenfunctions of $L$:
-$$\begin{aligned}(Lf_{j,k})(x,y)&=\left(\sin\frac{\pi j(x-1)}{m+1}+\sin\frac{\pi j(x+1)}{m+1}\right)\sin\frac{\pi k y}{n+1}\\ &+i\sin\frac{\pi jx}{m+1}\left(\sin\frac{\pi k(y-1)}{n+1}+\sin\frac{\pi k(y+1)}{n+1}\right)\end{aligned}\\&=2\left(\cos\frac{\pi j}{m+1}+i\cos\frac{\pi k}{n+1}\right)$$
+$$\begin{aligned}(Lf_{j,k})(x,y)&=\left(\sin\frac{\pi j(x-1)}{m+1}+\sin\frac{\pi j(x+1)}{m+1}\right)\sin\frac{\pi k y}{n+1}\\ &+i\sin\frac{\pi jx}{m+1}\left(\sin\frac{\pi k(y-1)}{n+1}+\sin\frac{\pi k(y+1)}{n+1}\right)\end{aligned}\\ &=2\left(\cos\frac{\pi j}{m+1}+i\cos\frac{\pi k}{n+1}\right)$$
 So
 $$\text{det}(\tilde{\boldsymbol A})=\prod\limits_{j=1}^m\prod\limits_{k=1}^n\left(2\cos\frac{\pi j}{m+1}+2i\cos\frac{\pi k}{n+1}\right)$$
 Assuming $n$ is even while $m$ is arbitrary, we have:
