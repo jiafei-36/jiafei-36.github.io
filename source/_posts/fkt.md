@@ -255,12 +255,9 @@ $$(2,3),(4,5),\cdots,(2n-2,2n-1),(2n,1)$$
 
 For both states, a half of the edges are chosen and because of the double-odd property, their directional signature is opposite, while their permutation signature is opposite too. Thus, their final signature keep same.
 
-Also, this property of single even cycle can be easily extended to conjunction of them.
+For two different perfect matches $\sigma$ and $\sigma'$, assuming an alternated matching pair $(x_0,y_0)$ in $\sigma$ and is changed to $(x_0,y_1)$ in $\sigma'$, since the $\sigma$ is a perfect match, there must exist $(x_1,y_1)$ in $\sigma$ but it is alternated into $(x_1,y_2)$ in $\sigma'$. And by such a locating method, we will finally meet $y_0$ again, which consisit a complete even cycle in $G$. When $\sigma$ is alternated into $\sigma'$, each edge on this cycle alternate its state precisely once, and there is no other matches which related to the vertices of this cycle changed, since that will cause a bad match. In short, the difference of two different perfect matches differs only from a serires of non-intersecting cycles, and the differece is a kind of one-by-one alternation, which does not change the signature.
 
-This orientation is **Pfaffian Orientation**, we provide an intuitive description above, and now we try to prove that it keeps the signature of all additive terms all-same rigorously.
-
-#### Pfaffian Orientation
-
+This orientation is **Pfaffian Orientation** which keeps the signature of all additive terms in the pfaffian summation all-same .
 
 #### FKT Procedure
 
