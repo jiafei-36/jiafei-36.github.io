@@ -147,7 +147,7 @@ $$\text{perm}(\boldsymbol A)=\sum\limits_{\sigma\in S_n}\prod\limits_{i=1}^n a_{
 
 This is the so-called **Permanent**. For a Bipartite Adjacency Matrix $\boldsymbol{BiA}$, the perfect match number is equal to its permanet $perm(\boldsymbol{BiA})$.
 
-This is trivial in fact since the permanent just try each case of the permutation brute-forcely, with a temporal complexity $\mathcal O(n!)$
+This is trivial in fact since the permanent just tries each case of the permutation brute-forcely, with a temporal complexity $\mathcal O(n!)$
 
 We can compute determinat with **Gaussian Elimination** in $\mathcal O(n^3)$, but it is hard to find an efficient algorithm for calculating permanent.
 
@@ -190,12 +190,12 @@ $$\boldsymbol A_{d\times d}=\left\lbrack\begin{matrix}a_{1,1}&a_{1,2}&a_{1,3}&\c
 
 Let $\boldsymbol Q$ be an elementary operation of row (of course invertible), thus $\boldsymbol Q^T$ will be a corresponding column operation. Simultanous apply $\boldsymbol Q$ and $\boldsymbol Q^T$ to an antisymmetric matrix would not break the property of antisymmetry.
 
-Since the rank of an antisymmetric would not be $1$, we could alway reorder the indices (the reorder operation can also be treated with form $\boldsymbol Q^T\boldsymbol A\boldsymbol Q$ where $\boldsymbol Q$ is invertible) such that $\text{rank}(\boldsymbol U)=2$ until $\boldsymbol A=\boldsymbol O$.
+Since the rank of an antisymmetric matrix would not be $1$, we could alway reorder the indices (the reorder operation can also be treated with form $\boldsymbol Q^T\boldsymbol A\boldsymbol Q$ where $\boldsymbol Q$ is invertible) such that $\text{rank}(\boldsymbol U)=2$ until $\boldsymbol A=\boldsymbol O$.
 
 Because $\text{rank}(\boldsymbol A)\geq\text{rank}(\boldsymbol V)$, so we can apply series of paired elementary operations such that :
 $$(\boldsymbol Q\cdots)^T\boldsymbol A\boldsymbol (\boldsymbol Q\cdots)=\left\lbrack\begin{matrix}\boldsymbol U'_{2\times 2}&\boldsymbol O_{2\times (d-2)}\\ \boldsymbol O_{(d-2)\times 2}&\boldsymbol V'_{(d-2)\times (d-2)}\end{matrix}\right\rbrack$$
 
-and then scale $V'$ to $\left(\begin{matrix}0&1\\ -1&0\end{matrix}\right)$:
+and then scale $\boldsymbol U'$ to $\left(\begin{matrix}0&1\\ -1&0\end{matrix}\right)$:
 
 $$(\boldsymbol Q\cdots)^T\boldsymbol A\boldsymbol (\boldsymbol Q\cdots)=\left\lbrack\begin{matrix}0&1&0&\cdots&0\\ -1&0&0&\cdots&0\\ 0&0&\ddots&\cdots&\cdots\\ \vdots&\vdots&\vdots&\ddots& \\ 0&0&\vdots&&\ddots \end{matrix}\right\rbrack$$
 
@@ -231,7 +231,7 @@ Since the pfaffian differs from perfect match amount only by a signature factor,
 + $a^*_{i,j}=1$ when there exists edge $v_j\to v_i$ ;
 + $a^*_{i,j}=0$ when there is no edge relating $v_i$ with $v_j$.
 
-If we can find an orientation for a BPG such that the signature introduced by orientation happens to be same with $\text{sgn}(\sigma)$, thus we can calculate 
+If we can find an orientation for a BPG such that the signature introduced by orientation of each additive term happens to be all-same or all-opposite with $\text{sgn}(\sigma)$, thus we can calculate 
 $$\sqrt{\text{det}(\boldsymbol A^*)}=|\text{pf}(\boldsymbol A^*)|=\text{PerfectMatch}(\boldsymbol A)$$ 
 with temporal complexity of $\mathcal O (n^3)$.
 
@@ -263,7 +263,7 @@ $$(2,3),(4,5),\cdots,(2n-2,2n-1),(2n,1)$$
 
 For both states of these two perfect matches, a half of the edges are chosen, and because of the double-odd property, their directional signature is opposite (for there must be one of them have even amount of oppsite edges and another one has odd amount), while their permutation signature is opposite too (put $1$ from head to the tail will cause $2n-1$ reverse pairs). Thus, their final signature keep same.
 
-For two different perfect matches $\sigma$ and $\sigma'$, assuming an alternated matching pair $(x_0,y_0)$ in $\sigma$ and is changed to $(x_0,y_1)$ in $\sigma'$, since the $\sigma$ is a perfect match, there must exist $(x_1,y_1)$ in $\sigma$ but it is alternated into $(x_1,y_2)$ in $\sigma'$. And through such a locating method, we will finally meet $y_0$ again, which consist a complete even cycle in $G$. When $\sigma$ is alternated into $\sigma'$, each edge on this cycle alternate its state precisely once, and there is no other matches which related to the vertices of this cycle changed, since that will cause a bad match. In short, the difference of two different perfect matches differs only from a serires of non-intersecting cycles, and the differece is a kind of one-by-one alternation, which does not change the signature.
+For two different perfect matches $\sigma$ and $\sigma'$, assuming an alternated matching pair $(x_0,y_0)$ in $\sigma$ and is changed to $(x_0,y_1)$ in $\sigma'$, since the $\sigma$ is a perfect match, there must exist $(x_1,y_1)$ in $\sigma$ but it is alternated into $(x_1,y_2)$ in $\sigma'$. And through such a locating method, we will finally meet $y_0$ again, which consist a complete even cycle in $G$. When $\sigma$ is alternated into $\sigma'$, each edge on this cycle alternate its state precisely once, and there is no other matches which related to the vertices of this cycle changed, since that will cause a bad match. In short, the difference of two different perfect matches differs only from a series of non-intersecting cycles, and the differece is a kind of one-by-one alternation, which does not change the signature.
 
 
 #### FKT Procedure
@@ -271,7 +271,7 @@ For two different perfect matches $\sigma$ and $\sigma'$, assuming an alternated
 The Fisher-Kasteleyn-Temperley Algorithm procedure is given by:
 1. Compute a planar embedding of $G$;
 2. Compute a spanning tree $T_1$ of $G$;
-3. Given an arbitrary orientation to each edge of $T_1$ (also to corresponding edge in $G$);
+3. Given an arbitrary orientation to each edge of $T_1$ (also to the corresponding edge in $G$);
 4. Create another undirected graph $T_2$ whose vertex set is same as the dual graph (face-to-vertex) of $G$ and initial edge set is empty;
 5. Add an edge to $T_2$ if two faces of $T_2$ share an edge in $G$ which is not in $T_1$ (now $T_2$ is a tree, otherwise a cycle of $T_2$ will enclose an isolated area of $G$ which is not connected to $T_1$);
 6. For each leaf v in $T_2$:
@@ -299,10 +299,12 @@ Clearly a legal encoding correspond to only one perfect coverage, while encoding
 
 $$f(m,n)\leq \left(\sqrt{2}\right)^{mn}\approx 1.414^{mn}$$
 
-Let $\boldsymbol B$ be the bipartite adjacency matrix of graph $G$, we define $\tilde{\boldsymbol B}$ as replace any $+1$ in $\boldsymbol B$ which is related to a vertical tile with $+i$, and adjacency matrix $\boldsymbol A,\tilde{\boldsymbol A}$ is gained through (here we reorder the vertices of $G$ so that two partitions are separatedly indexed.):
+Let $\boldsymbol B$ be the bipartite adjacency matrix of graph $G$, we define $\tilde{\boldsymbol B}$ as replace any $+1$ in $\boldsymbol B$ which is related to a vertical edge in $G$ with $+i$, and adjacency matrix $\boldsymbol A,\tilde{\boldsymbol A}$ is gained through (here we reorder the vertices of $G$ so that two partitions are separatedly indexed.):
 
 $$\boldsymbol A=\left\lbrack\begin{matrix}\boldsymbol O&\boldsymbol B\\ \boldsymbol B^T&\boldsymbol O\end{matrix}\right\rbrack,\tilde{\boldsymbol A}=\left\lbrack\begin{matrix}\boldsymbol O&\tilde{\boldsymbol B}\\ \tilde{\boldsymbol B}^T&\boldsymbol O\end{matrix}\right\rbrack$$
 
+Assuming we have a $3\times 2$ grid board and its graph $G$. Here is an example for \tilde{\boldsymbol B} (the left part shows how we index the vertices):
+$$\begin{matrix}1&4\\ 5&2\\ 3&6\end{matrix},\tilde{\boldsymbol B}=\left\lbrack\begin{matrix}1&i&0\\ i&1&i\\ 0&i&1\end{matrix}\right\rbrack$$
 First we need to show that $\text{det}(\tilde{\boldsymbol B})=\pm f(m,n)$. Here we also need to prove that the signature of every additive term of the determinant summation keeps all same. Label the vertices of two partitions separately from $0$ to $\frac{mn}2$ , so that every perfect match now corresponds to a permutation of $\lbrace 1,\cdots,\frac{mn}{2}\rbrace$ without redundant (form a permanent on the $\boldsymbol B$ instead of a pfaffian on $\boldsymbol A$). $+1$ represents a horizontal edge in $\boldsymbol B$ and $+i$ for a vertical one. The signature of an additive term equals $\text{sgn}(\sigma)\omega(\sigma)$ , where $\omega(\sigma)=\prod\limits_{j=1}^{\frac{mn}{2}}b_{j,\sigma_j}$.
 
 We need to show for any different permutations (also perfect match) $\sigma_1,\sigma_2$ , it holds that:
