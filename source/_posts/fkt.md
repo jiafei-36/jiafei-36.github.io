@@ -229,9 +229,11 @@ Since the pfaffian differs from perfect match amount only by a signature factor,
 + $a^*_{i,j}=1$ when there exists edge $v_j\to v_i$ ;
 + $a^*_{i,j}=0$ when there is no edge relating $v_i$ with $v_j$.
 
-If we can find an orientation for a BPG such that the signature introduced by orientation happens to be same with $\text{sgn}(\sigma)$, thus we can calculate $\sqrt{\text{det}(\boldsymbol A^*)}=|\text{pf}(\boldsymbol A^*)|=\text{PerfectMatch}(\boldsymbol A)$ with temporal complexity of $\mathcal O (n^3)$.
+If we can find an orientation for a BPG such that the signature introduced by orientation happens to be same with $\text{sgn}(\sigma)$, thus we can calculate 
+$$\sqrt{\text{det}(\boldsymbol A^*)}=|\text{pf}(\boldsymbol A^*)|=\text{PerfectMatch}(\boldsymbol A)$$ 
+with temporal complexity of $\mathcal O (n^3)$.
 
-An additive factor $\text{sgn}(\sigma)\prod\limits_{i=1}^na_{\sigma(2i-1),\sigma(2i)}$ is non-zero if and only if 
+An additive term $\text{sgn}(\sigma)\prod\limits_{i=1}^na_{\sigma(2i-1),\sigma(2i)}$ is non-zero if and only if 
 $$(\sigma(1),\sigma(2)),(\sigma(3),\sigma(4)),\cdots,(\sigma(2n-1),\sigma(2n))$$
 is a perfect match.
 
