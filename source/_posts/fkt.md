@@ -224,6 +224,8 @@ Thus we prove that $\text{pf}^2(\boldsymbol A)=\text{det}(\boldsymbol A)$.
 
 ### Fisher-Kasteleyn-Temperley Algorithm
 
+#### Pfaffian Orientation
+
 Since the pfaffian differs from perfect match amount only by a signature factor, we now give each edge of the BPG a direction, and change the adjacency matrix into directional adjacency matrix $\boldsymbol A^*=(a_{i,j})_{2n\times 2n}$ with rules:
 + $a^*_{i,j}=-1$ when there exists edge $v_i\to v_j$ ;
 + $a^*_{i,j}=1$ when there exists edge $v_j\to v_i$ ;
@@ -241,11 +243,17 @@ Consider an orientation strategy as:
 + Since there is no odd cycle, when we traverse any cycle clockwise, we can orient edges on the cycle with odd amount of edges in the same direction and odd amount of edges in the opposite direction (We call this state a double-odd state);
 + We can first choose a cycle and orient each edge of it till reaching double-odd state, and then choose another cycle share edges with it (still requires double-odd). Untill all cycles have been oriented.
 + The double-odd state is extensive, since, when you conjunct two cycle into a larger one, the edges of same and opposite direction are vanishing in pairs, so all the cycles can reach double-odd together.
-+ Edge does not belong to any cycle can be treated arbitrarily since their matching is fixed (from the leave vertex one by one).
++ Edges do not belong to any cycle can be treated arbitrarily since their matching is fixed (from the leave vertex one by one).
 
-In fact, there are only two type of matching states on an even cycle (imagine a coloring method of alternately applying two color to the even cycle).
+This orientation is **Pfaffian Orientation** which keeps the signature of all additive terms in the pfaffian summation all-same.
 
-We can simply denote the two perfect match as:
+Now we try to prove this signature-keeping property:
+
+If we just change the order of one pair of the perfect match permutation like $(\sigma_i,\sigma_{i+1})\to (\sigma_{i+1},\sigma_{i})$ , this will cause the signature a first flip for the permutation signature, and a second flip for the antisymmetry of the directional adjacency matrix, and therefore remains unchanged.
+
+In fact, there are only two type of matching states on an even cycle (imagine a coloring method of alternately applying two color to the edges of an even cycle).
+
+We can simply denote the two perfect matches as:
 
 $$(1,2),(3,4),\cdots,(2n-1,2n)$$
 
@@ -253,11 +261,10 @@ and
 
 $$(2,3),(4,5),\cdots,(2n-2,2n-1),(2n,1)$$
 
-For both states, a half of the edges are chosen and because of the double-odd property, their directional signature is opposite, while their permutation signature is opposite too. Thus, their final signature keep same.
+For both states of these two perfect matches, a half of the edges are chosen, and because of the double-odd property, their directional signature is opposite (for there must be one of them have even amount of oppsite edges and another one has odd amount), while their permutation signature is opposite too (put $1$ from head to the tail will cause $2n-1$ reverse pairs). Thus, their final signature keep same.
 
-For two different perfect matches $\sigma$ and $\sigma'$, assuming an alternated matching pair $(x_0,y_0)$ in $\sigma$ and is changed to $(x_0,y_1)$ in $\sigma'$, since the $\sigma$ is a perfect match, there must exist $(x_1,y_1)$ in $\sigma$ but it is alternated into $(x_1,y_2)$ in $\sigma'$. And by such a locating method, we will finally meet $y_0$ again, which consisit a complete even cycle in $G$. When $\sigma$ is alternated into $\sigma'$, each edge on this cycle alternate its state precisely once, and there is no other matches which related to the vertices of this cycle changed, since that will cause a bad match. In short, the difference of two different perfect matches differs only from a serires of non-intersecting cycles, and the differece is a kind of one-by-one alternation, which does not change the signature.
+For two different perfect matches $\sigma$ and $\sigma'$, assuming an alternated matching pair $(x_0,y_0)$ in $\sigma$ and is changed to $(x_0,y_1)$ in $\sigma'$, since the $\sigma$ is a perfect match, there must exist $(x_1,y_1)$ in $\sigma$ but it is alternated into $(x_1,y_2)$ in $\sigma'$. And through such a locating method, we will finally meet $y_0$ again, which consist a complete even cycle in $G$. When $\sigma$ is alternated into $\sigma'$, each edge on this cycle alternate its state precisely once, and there is no other matches which related to the vertices of this cycle changed, since that will cause a bad match. In short, the difference of two different perfect matches differs only from a serires of non-intersecting cycles, and the differece is a kind of one-by-one alternation, which does not change the signature.
 
-This orientation is **Pfaffian Orientation** which keeps the signature of all additive terms in the pfaffian summation all-same .
 
 #### FKT Procedure
 
@@ -280,3 +287,50 @@ We can now using **FKT-Algorithm** compute the domino tiling problem efficiently
 ![Directing](/images/Directional.svg)
 
 But this is not enough for getting a close-form solution.
+
+We can first make an approximation of the $f(m,n)$. Since $f(2,n)$ relates with Fibonacci Series, we can easily derive that:
+$$f(m,n)\geq \left(\sqrt{\frac{\sqrt{5}+1}{2}}\right)^{mn}\approx 1.272^{mn}$$
+Also, let us try to encode a perfect coverage pattern through:
++ Traverse each grid following the row first column second order
++ If the tile corresponding to the gird has already been encode, ignore it
++ If the tile is horizontal then encode 0, and vertical one for 1
+
+Clearly a legal encoding correspond to only one perfect coverage, while encoding dimension is $\frac{mn}{2}$, so:
+
+$$f(m,n)\leq \left(\sqrt{2}\right)^{mn}\approx 1.414^{mn}$$
+
+Let $\boldsymbol B$ be the bipartite adjacency matrix of graph $G$, we define $\tilde{\boldsymbol B}$ as replace any $+1$ in $\boldsymbol B$ which is related to a vertical tile with $+i$, and adjacency matrix $\boldsymbol A,\tilde{\boldsymbol A}$ is gained through (here we reorder the vertices of $G$ so that two partitions are separatedly indexed.):
+
+$$\boldsymbol A=\left\lbrack\begin{matrix}\boldsymbol O&\boldsymbol B\\ \boldsymbol B^T&\boldsymbol O\end{matrix}\right\rbrack,\tilde{\boldsymbol A}=\left\lbrack\begin{matrix}\boldsymbol O&\tilde{\boldsymbol B}\\ \tilde{\boldsymbol B}^T&\boldsymbol O\end{matrix}\right\rbrack$$
+
+First we need to show that $\text{det}(\tilde{\boldsymbol B})=\pm f(m,n)$. Here we also need to prove that the signature of every additive term of the determinant summation keeps all same. Label the vertices of two partitions separately from $0$ to $\frac{mn}2$ , so that every perfect match now corresponds to a permutation of $\lbrace 1,\cdots,\frac{mn}{2}\rbrace$ without redundant (form a permanent on the $\boldsymbol B$ instead of a pfaffian on $\boldsymbol A$). $+1$ represents a horizontal edge in $\boldsymbol B$ and $+i$ for a vertical one. The signature of an additive term equals $\text{sgn}(\sigma)\omega(\sigma)$ , where $\omega(\sigma)=\prod\limits_{j=1}^{\frac{mn}{2}}b_{j,\sigma_j}$.
+
+We need to show for any different permutations (also perfect match) $\sigma_1,\sigma_2$ , it holds that:
+
+$$\text{sgn}(\sigma_1)\omega(\sigma_1)=\text{sgn}(\sigma_2)\omega(\sigma_2)$$
+
+Define $\sigma_1+\sigma_2$ as the multigraph gained by combining the edges of $\sigma_1$ and the edges of $\sigma_2$ (which may cause double edges,namely the 2-cycles). Despite the double edges, the rest of $\sigma_1+\sigma_2$ shall split into many non-intersecting even cycles with length $4$ or more (the prove is given previously at the pfaffian orientation). If we get $r$ cycles (including the double edges) here, we can flip the states of all those $r$ even cycles rightly by once (the double edge remains unchanged) to convert $\sigma_1$ into $\sigma_2$. Assuming the length of these cycles are $2l_1,2l_1,\cdots,2l_r$ satisfying $2l_1+2l_2+\cdots+2l_r=mn$. The transforming procedure can be described using cyclic permutation, that is to say, $\sigma_2$ is gained from $\sigma_1$ times a $l_1$-cyclic permutation, a $l_2$-cyclic permutation ..., a $l_r$-cyclic permutation which implies:
+
+$$\text{sgn}(\sigma_2)=(-1)^{(l_1+1)+(l_2+1)+\cdots+(l_r+1)}\text{sgn}(\sigma_1)=(-1)^{\frac{mn}2+r}\text{sgn}(\sigma_1)$$
+
+Note that we are working on a gird board, so the cycles are in fact taking the form like the components in Tetris. For a cycle $C$, we can give it an arbitrary orientation (clockwise or counter-clockwise?) and get an oriented close path $\Gamma(C)$. Define $d(\Gamma(C))$ as the amount of vertical edges directing from a black to a white vertex minus the amount of vertical edges directing from a white to a black vertex. Then $\frac{\omega(\sigma_1)}{\omega(\sigma_2)}$ is in fact cumulated on each cycle:
+$$\frac{\omega(\sigma_1)}{\omega(\sigma_2)}=\prod\limits_{j=1}^rd(\Gamma({C_j}))$$
+Also $d(\Gamma(C))=\sum\limits_{j=1}^s\Gamma(c_j)$ where $c_1,c_2,\cdots,c_s$ are the $s$ squares on the grid board which consist $C$ (imagine that the flows on their common edges diminish each other). If we set $\Gamma$ as counter-clockwise, and set the color of a square $c$ same as the color of the vertex at its top-left. Then for a black square $c_1$ and a white square $c_2$ we have $d(\Gamma(c_1))=2,d(\Gamma(c_2))=-2$.
+However, we have $(i)^{2}=(i)^{-2}=-1$ , so in fact 
+$$\frac{\omega(\sigma_1)}{\omega(\sigma_2)}=\prod\limits_{j=1}^r(-1)^(A(C_j))=(-1)^{\sum\limits_{j=1}^rA(C_j)}$$
+where $A(C)$ is the area of $C$ (set the area of a regular square as $1$).
+We have Pick's Theorem which states that $A(C)=I(C)+\frac12B(C)-1$ on gird board, where $I(C)$ is the amount of interior points of $C$ and $B(C)$ is the amount of points on the boundary of $C$. Here $I(C)$ must be even or otherwise the interior part cut down by $C$ could not have a perfect match. Meanwhile, $\frac12B(C)$ is in fact $l$, so
+$$A(C)\equiv l(C)-1(\text{mod} 2),\frac{\omega(\sigma_1)}{\omega(\sigma_2)}=(-1)^{\sum\limits_{j=1}^rl_j-1}=(-1)^{\frac{mn}2-r}$$
+
+At last, we have 
+$$\frac{\text{sgn}(\sigma_2)\omega(\sigma_2)}{\text{sgn}(\sigma_1)\omega(\sigma_1)}=(-1)^{\frac{mn}2+r+\frac{mn}2+-r}=(-1)^{mn}=1$$
+That is to say
+$$|\text{det}(\boldsymbol B)|= \text{perm}(\boldsymbol B)=\text{PerfectMatch}(G)=f(m,n)$$
+
+
+
+
+
+
+
+
