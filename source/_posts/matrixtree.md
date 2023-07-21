@@ -71,9 +71,9 @@ namely the determinant of an arbitrary $n-1$ order principal sub-matrix of $K(G)
 
 ***Prove***:
 
-Denoting $B_r$ as the matrix gained by getting rid of the $r$-th row of $B(G). Obviously $C_r(K)=B_rB_r^T$
+Denoting $B_r$ as the matrix gained by getting rid of the $r$-th row of $B(G)$. Obviously $C_r(K)=B_rB_r^T$
 With Cauchy-Binet Formula:
-$$\begin{aligned}\text{det}(C_r(K))=\text{det}(B_rB_r^T)\\ \left\lbrace\begin{aligned}0,&\nu(G)-1>m(G)\\ \sum\limits_{1\leq i_1<i_2<\cdots<i_{\nu-1}\leq m}\text{det}\left(B_r\left(\begin{matrix}1&2&\cdots&\nu-1\\ i_1&i_2&\cdots&i_{\nu}\end{matrix}\right)\right)^2,&\nu(G)-1>m(G)\end{aligned}\right.\end{aligned}=e$$
+$$\begin{aligned}\text{det}(C_r(K))&=\text{det}(B_rB_r^T)\\ &=\left\lbrace\begin{aligned}0,&\nu(G)-1>m(G)\\ \sum\limits_{1\leq i_1<i_2<\cdots<i_{\nu-1}\leq m}\text{det}\left(B_r\left(\begin{matrix}1&2&\cdots&\nu-1\\ i_1&i_2&\cdots&i_{\nu}\end{matrix}\right)\right)^2,&\nu(G)-1>m(G)\end{aligned}\right.\end{aligned}=e$$
 Let 
 $$x=(x_1,x_2,x_3,\cdots,x_{\nu-1}),1\leq x_1<x_2<\cdots<x_{\nu-1}\leq m$$
 and make a abbreviated notion:
