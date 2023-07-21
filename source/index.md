@@ -35,6 +35,6 @@ Github: [pscgylotti](https://github.com/Pscgylotti) <i class="fa-brands fa-githu
 
 {% raw %}
 <script>
-  document.getElementsByClassName("toggle sidebar-toggle")[0].click();
+  window.onload=function(){document.getElementsByClassName("toggle sidebar-toggle")[0].click();}
 </script>
 {% endraw %}
