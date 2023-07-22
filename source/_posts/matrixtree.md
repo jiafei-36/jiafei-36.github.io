@@ -80,7 +80,7 @@ and make a abbreviated notion:
 $$B_r^x=B_r\left(\begin{matrix}1&2&\cdots&\nu-1\\ i_1&i_2&\cdots&i_{\nu}\end{matrix}\right)$$
 We have:
 $$\text{det}(B_r^x)^2=\text{det}(B_r^x)\text{det}((B_r^x)^T)=det(B_r^x(B_r^x)^T)$$
-In fact $B_r^x(B_r^x)^T$ is a $\nu-1$ order principal sub-matrix of a $\nu$ order Kirchhoff matrix, we have $B_r^x(B_r^x)^T=1$ if adding $\theta(x_1),\theta(x_2),\cdots,\theta(x_{\nu-1})$ to the empty graph of $V(G)$ is a tree, or else $B_r^x(B_r^x)^T=1$ (since there are $\nu-1$ edges which is the minimal requirement for a completely connected graph).
+In fact $B_r^x(B_r^x)^T$ is a $\nu-1$ order principal sub-matrix of a $\nu$ order Kirchhoff matrix, we have $\text{det}\left(B_r^x(B_r^x)^T\right)=1$ if adding $\theta(x_1),\theta(x_2),\cdots,\theta(x_{\nu-1})$ to the empty graph of $V(G)$ is a tree, or else $\text{det}\left(B_r^x(B_r^x)^T\right)=0$ (since there are $\nu-1$ edges which is the minimal requirement for a completely connected graph).
 So if we compute the $\text{det}(C_r(K))$, it will automatically traverse any possible sub graph of $G$ with $\nu-1$ edge and self-add $1$ if it find a tree. Thus
 $$\text{det}\left(C_r(K(G))\right)=\tau(G)$$
 
