@@ -5,7 +5,7 @@ on:
     branches:
       - main  # default branch
     paths:
-      - source/_posts/**
+      - source/**
 
 jobs:
   pages:
