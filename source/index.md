@@ -1,6 +1,6 @@
 ---
 title: Welcome to my personal website
-date: 2023-07-18
+date: 2023-07-19
 type: "Home"
 ---
 
