@@ -12,9 +12,9 @@ with interests in Algebraic topology.
 
 ### Personal Information
 
-Personal Email: <a href="mailto:pscgylotti@gmail.com">pscgylotti@gmail.com</a>  <i class="fa fa-envelope"></i>
+Personal Email: <a href="mailto:nijiahui@mail.ustc.edu.cn">nijiahui@mail.ustc.edu.cn</a>  <i class="fa fa-envelope"></i>
 
-Github: [pscgylotti](https://github.com/Pscgylotti) <i class="fa-brands fa-github"></i>
+Github: [jiafei-36](https://github.com/jiafei-36) <i class="fa-brands fa-github"></i>
 
 ### Educational Information
 
