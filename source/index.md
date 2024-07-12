@@ -8,7 +8,7 @@ type: "Home"
 
 I am a student major in mathematics <span style="color:blue" title="Year 2023">now</span>
 
-with interests in Langlands program.
+with interests in Algebraic topology.
 
 ### Personal Information
 
@@ -18,7 +18,7 @@ Github: [pscgylotti](https://github.com/Pscgylotti) <i class="fa-brands fa-githu
 
 ### Educational Information
 
-2019-2023: University of Science and Technologies of China (USTC <a href="https://www.ustc.edu.cn"> <i class="fa fa-book"></i></a>), Bachelor Degree.
+2023-2024: University of Science and Technologies of China (USTC <a href="https://www.ustc.edu.cn"> <i class="fa fa-book"></i></a>), Bachelor Degree.
 
 ### Technology Tree
 
