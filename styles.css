@@ -64,3 +64,31 @@ h1 { font-size: 28px; }
 .pdf-pages img { display: block; width: 100%; height: auto; background: white; border: 1px solid #deded5; }
 .pdf-pages figcaption { text-align: center; color: #777970; font-size: 12px; margin-top: 8px; }
 
+
+.research-topic { margin-top: 42px; }
+.topic-help { position: relative; }
+.topic-help h2 { margin: 0 0 22px; }
+.topic-trigger { padding: 0; border: 0; border-bottom: 1px dotted #777970; color: #30312e; background: transparent; font: inherit; font-size: 25px; line-height: 1.6; cursor: pointer; }
+.topic-trigger:focus-visible { outline: 2px solid #34566f; outline-offset: 5px; }
+.topic-explanation { position: absolute; left: 0; top: 100%; z-index: 12; width: min(660px, 100%); padding: 25px 28px; background: #fffdf7; border: 1px solid #d8d9cf; border-radius: 4px; box-shadow: 0 12px 32px rgb(48 49 46 / 12%); font-size: 15px; line-height: 1.9; }
+.topic-explanation[hidden] { display: none; }
+.topic-explanation p:last-child { margin-bottom: 0; }
+.definition-note { color: #676b61; font-size: 14px; }
+.research-context { color: #676b61; font-size: 14px; margin-bottom: 30px; }
+.research-problem { padding: 30px 0; border-top: 1px solid #deded5; }
+.research-problem h3 { font-size: 19px; line-height: 1.7; font-weight: 500; margin: 0 0 20px; }
+.research-problem p { line-height: 2.1; }
+.research-result { border-left: 3px solid #767f69; padding-left: 16px; margin-bottom: 25px; }
+.research-result strong { font-weight: 600; }
+math { font-family: "Cambria Math", "STIX Two Math", math; font-size: 1.06em; }
+.math-block { overflow-x: auto; padding: 12px 0; margin: 8px 0 20px; }
+.math-block math { width: max-content; min-width: min-content; margin-inline: auto; font-size: 1.13em; }
+.definition-domain { margin-top: -10px; padding-top: 0; }
+@media (max-width: 600px) {
+.research-topic { margin-top: 34px; }
+.topic-explanation { padding: 19px 18px; font-size: 14px; }
+.topic-trigger { font-size: 23px; }
+.research-problem { padding: 25px 0; }
+.research-problem h3 { font-size: 18px; }
+.math-block math { font-size: 1em; }
+}
