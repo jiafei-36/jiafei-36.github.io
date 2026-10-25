@@ -8,6 +8,7 @@
 <link rel="icon" href="github-avatar.jpg" type="image/jpeg">
 <link rel="apple-touch-icon" href="github-avatar.jpg">
 <link rel="stylesheet" href="styles.css">
+<script src="navigation.js" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">跳到正文</a>
@@ -15,11 +16,17 @@
 <header class="site-header">
 <a class="site-brand" href="./"><img src="github-avatar.jpg" alt="" width="28" height="28"><span>倪嘉晖的个人主页</span></a>
 <nav aria-label="主导航"><a href="./">主页</a>
-<a href="math.html" aria-current="page">数学</a>
+<div class="nav-dropdown">
+<a class="math-nav-link" href="math.html" aria-current="page" aria-expanded="false" aria-controls="math-subpages">数学</a>
+<div class="nav-submenu" id="math-subpages" hidden>
+<a href="recent-work.html" aria-current="page">近期工作</a>
+<a href="teaching.html">助教工作</a>
+</div>
+</div>
 <a href="reviews.html">评论与推荐</a></nav>
 </header>
 <main id="main" class="content-page">
-<a class="back-link" href="math.html">← 返回数学</a>
+<a class="back-link" href="math.html">返回数学</a>
 <h1>近期工作</h1>
 <p>近期主要开展 Ricci flow 相关内容的形式化工作。</p>
 </main>

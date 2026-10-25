@@ -8,6 +8,7 @@
 <link rel="icon" href="github-avatar.jpg" type="image/jpeg">
 <link rel="apple-touch-icon" href="github-avatar.jpg">
 <link rel="stylesheet" href="styles.css">
+<script src="navigation.js" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">跳到正文</a>
@@ -15,12 +16,21 @@
 <header class="site-header">
 <a class="site-brand" href="./"><img src="github-avatar.jpg" alt="" width="28" height="28"><span>倪嘉晖的个人主页</span></a>
 <nav aria-label="主导航"><a href="./">主页</a>
-<a href="math.html" aria-current="page">数学</a>
+<div class="nav-dropdown">
+<a class="math-nav-link" href="math.html" aria-current="page" aria-expanded="false" aria-controls="math-subpages">数学</a>
+<div class="nav-submenu" id="math-subpages" hidden>
+<a href="recent-work.html">近期工作</a>
+<a href="teaching.html">助教工作</a>
+</div>
+</div>
 <a href="reviews.html">评论与推荐</a></nav>
 </header>
 <main id="main" class="content-page" aria-label="数学">
 <p class="page-intro">这里记录我的数学学习与相关工作。</p>
-<div class="work-section"><a class="work-link" href="recent-work.html">近期工作 <span aria-hidden="true">→</span></a></div>
+<div class="work-section math-links">
+<a class="work-link" href="recent-work.html">近期工作</a>
+<a class="work-link" href="teaching.html">助教工作</a>
+</div>
 </main>
 </div>
 </body>
