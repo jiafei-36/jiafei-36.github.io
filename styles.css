@@ -47,9 +47,20 @@ h1 { font-size: 28px; }
 .nav-submenu a:hover, .nav-submenu a:focus-visible { background: #eae8df; }
 .math-links { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
 .teaching-list { list-style: none; padding: 0; margin: 36px 0 0; max-width: 520px; }
-.teaching-list li { display: grid; grid-template-columns: 90px 1fr; gap: 24px; padding: 16px 0; border-bottom: 1px solid #deded5; }
+.teaching-list > li { display: grid; grid-template-columns: 90px 1fr; gap: 24px; padding: 16px 0; border-bottom: 1px solid #deded5; }
+.course-materials { min-width: 0; }
+.assignment-list { list-style: none; padding: 0; margin: 14px 0 0; font-size: 14px; }
+.assignment-list li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 18px; padding: 5px 0; }
+.download-link { font-size: 12px; color: #676b61; }
 .term { color: #777970; font-variant-numeric: tabular-nums; }
 @media (max-width: 600px) {
 .nav-submenu { left: -18px; right: auto; }
-.teaching-list li { grid-template-columns: 68px 1fr; gap: 16px; }
+.teaching-list > li { grid-template-columns: 68px 1fr; gap: 16px; }
 }
+
+.pdf-toolbar { display: flex; flex-wrap: wrap; gap: 12px 24px; margin-bottom: 30px; font-size: 14px; }
+.pdf-preview h1 { font-size: 26px; }
+.pdf-pages figure { margin: 0 0 32px; }
+.pdf-pages img { display: block; width: 100%; height: auto; background: white; border: 1px solid #deded5; }
+.pdf-pages figcaption { text-align: center; color: #777970; font-size: 12px; margin-top: 8px; }
+
