@@ -20,6 +20,23 @@ select:focus-visible{outline:2px solid #34566f;outline-offset:4px}
 .catalog-entry dt{font-size:13px;color:#777970}.catalog-entry dd{margin:8px 0 0;overflow-wrap:anywhere}
 .rating{font-variant-numeric:tabular-nums;font-weight:600;color:#565f50}.empty{color:#777970;padding-top:20px;border-top:1px solid #deded5}
 @media(max-width:600px){.catalog-filters{grid-template-columns:1fr;gap:12px}.catalog-entry dl{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.catalog-comment{grid-column:1/-1}}
+
+.catalog-tools,.editor-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.catalog-tools{margin:24px 0 12px}
+button,input,textarea{font:inherit}
+button{cursor:pointer;border:1px solid #bfc2b5;border-radius:3px;padding:6px 14px;background:#faf8f2;color:#34566f}
+button:hover{background:#eae8df}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #34566f;outline-offset:3px}
+.local-notice,#save-status{font-size:13px;color:#676b61;line-height:1.8}
+.entry-heading{display:flex;gap:16px;align-items:baseline;justify-content:space-between;margin-bottom:20px}
+.entry-heading h2{margin:0;overflow-wrap:anywhere}.entry-edit{flex-shrink:0;font-size:13px;padding:2px 10px}
+#entry-dialog{box-sizing:border-box;width:min(600px,calc(100% - 32px));max-height:90dvh;overflow:auto;border:1px solid #bfc2b5;border-radius:5px;background:#f5f3ec;color:#30312e;padding:28px}
+#entry-dialog::backdrop{background:rgb(0 0 0 / 35%)}
+#entry-dialog h2{margin:0 0 20px;font-size:23px;font-weight:500}
+.editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.editor-wide{grid-column:1/-1}
+.editor-grid input,.editor-grid textarea{box-sizing:border-box;width:100%;min-width:0;border:1px solid #bfc2b5;border-radius:3px;background:#faf8f2;color:#30312e;padding:9px 12px;font-size:16px}
+.editor-grid textarea{resize:vertical;min-height:130px}.editor-hint{font-size:12px;color:#676b61;margin:4px 0 0}
+#editor-error{color:#923d31;font-size:14px;margin:16px 0 0}.editor-actions{margin-top:20px}
+@media(max-width:600px){#entry-dialog{padding:20px}.editor-grid{grid-template-columns:1fr}.editor-wide{grid-column:auto}}
 </style>
 </head>
 <body>
@@ -32,6 +49,15 @@ select:focus-visible{outline:2px solid #34566f;outline-offset:4px}
 <main id="main" class="content-page">
 <a class="back-link" href="reviews.html">返回</a>
 <h1>收藏目录</h1>
+<div class="catalog-tools">
+<button type="button" id="add-entry">新增条目</button>
+<button type="button" id="export-entries">导出备份</button>
+<button type="button" id="import-entries">导入备份</button>
+<button type="button" id="reset-local">恢复网站版本</button>
+<input id="backup-file" type="file" accept=".json,application/json" hidden>
+</div>
+<p class="local-notice">免密码本地编辑：修改仅保存在当前浏览器，不会同步到公开网站或其他设备。清理浏览器数据前请导出备份。</p>
+<p id="save-status" role="status" aria-live="polite"></p>
 <form class="catalog-filters">
 <div><label for="prefix">番号</label><select id="prefix" name="prefix"><option value="">全部番号</option></select></div>
 <div><label for="tag">标签</label><select id="tag" name="tag"><option value="">全部标签</option></select></div>
@@ -39,48 +65,144 @@ select:focus-visible{outline:2px solid #34566f;outline-offset:4px}
 </form>
 <p class="catalog-count" role="status" aria-live="polite">共 0 个条目</p>
 <div class="catalog-list"><p class="empty">暂无条目。</p></div>
-<noscript><p>筛选和排序功能需要启用 JavaScript。</p></noscript>
+<noscript><p>编辑、筛选和排序功能需要启用 JavaScript。</p></noscript>
+<dialog id="entry-dialog" aria-labelledby="editor-title">
+<form id="entry-form">
+<h2 id="editor-title">新增条目</h2>
+<div class="editor-grid">
+<div><label for="entry-code">条目编号</label><input id="entry-code" name="code" required maxlength="80" autocomplete="off" placeholder="例如 ABC-001"></div>
+<div><label for="entry-rating">评分（0–10）</label><input id="entry-rating" name="rating" type="number" min="0" max="10" step="0.1" required></div>
+<div class="editor-wide"><label for="entry-tags">标签</label><input id="entry-tags" name="tags" maxlength="300" autocomplete="off"><p class="editor-hint">多个标签用逗号或顿号分隔。</p></div>
+<div class="editor-wide"><label for="entry-comment">评论</label><textarea id="entry-comment" name="comment" maxlength="10000"></textarea></div>
+</div>
+<p id="editor-error" role="alert"></p>
+<div class="editor-actions"><button type="submit">保存到本浏览器</button><button type="button" id="cancel-edit">取消</button></div>
+</form>
+</dialog>
 </main>
 </div>
 <script>
 'use strict';
-const entries = [
+const publishedEntries = [
   {code:'MOOC-029',tags:['男娘'],rating:9,comment:'不开声音真的超可爱，可惜公鸭嗓太难听了'},
   {code:'KTRA-796',tags:['条纹过膝袜'],rating:9,comment:''},
   {code:'PRTD-027',tags:['女仆'],rating:8,comment:'松本一香的表情很可爱，可惜没有我很喜欢的play'}
 ];
-const prefix = document.querySelector('#prefix');
-const tag = document.querySelector('#tag');
-const sort = document.querySelector('#sort');
-const list = document.querySelector('.catalog-list');
-function addOptions(select, values) {
-  [...new Set(values)].sort((a,b)=>a.localeCompare(b,'zh-CN')).forEach(value=>{
-    const option=document.createElement('option');option.value=value;option.textContent=value;select.append(option);
-  });
+
+const STORAGE_KEY='jiafei-36.collection.edits.v1';
+const prefix=document.querySelector('#prefix'),tag=document.querySelector('#tag'),sort=document.querySelector('#sort'),list=document.querySelector('.catalog-list');
+const status=document.querySelector('#save-status'),dialog=document.querySelector('#entry-dialog'),form=document.querySelector('#entry-form'),error=document.querySelector('#editor-error');
+let overrides={},editingId=null,entries=[],lastStored=null;
+function validItem(item){
+ return item&&typeof item.code==='string'&&item.code.trim().length>0&&item.code.length<=80&&
+ Array.isArray(item.tags)&&item.tags.length<=30&&item.tags.every(t=>typeof t==='string'&&t.length<=100)&&
+ typeof item.rating==='number'&&Number.isFinite(item.rating)&&item.rating>=0&&item.rating<=10&&
+ typeof item.comment==='string'&&item.comment.length<=10000;
 }
-addOptions(prefix,entries.map(item=>item.code.split('-')[0]));
-addOptions(tag,entries.flatMap(item=>item.tags));
-function render() {
-  const filtered=entries.filter(item=>(!prefix.value||item.code.split('-')[0]===prefix.value)&&(!tag.value||item.tags.includes(tag.value)))
-    .sort((a,b)=>sort.value==='asc'?a.rating-b.rating:b.rating-a.rating);
-  document.querySelector('.catalog-count').textContent='共 '+filtered.length+' 个条目';
-  list.replaceChildren();
-  if(!filtered.length){const p=document.createElement('p');p.className='empty';p.textContent=entries.length?'没有符合条件的条目，请调整筛选条件。':'暂无条目。';list.append(p);return;}
-  for(const item of filtered){
-    const article=document.createElement('article');article.className='catalog-entry';
-    const title=document.createElement('h2');title.textContent=item.code;article.append(title);
-    const dl=document.createElement('dl');
-    for(const [label,value] of [['标签',item.tags.join('、')],['评分',item.rating+'/10'],['评论',item.comment||'']]){
-      const group=document.createElement('div');const dt=document.createElement('dt');const dd=document.createElement('dd');
-      if(label==='评论')group.className='catalog-comment';
-      dt.textContent=label;dd.textContent=value;if(label==='评分')dd.className='rating';
-      if(label!=='评论'||value){group.append(dt,dd);dl.append(group);}
-    }
-    article.append(dl);list.append(article);
+function combined(data){
+ const ids=new Set(publishedEntries.map(item=>'base:'+item.code));
+ return [...publishedEntries.map(item=>({...item,...data['base:'+item.code],id:'base:'+item.code})),
+ ...Object.entries(data).filter(([id])=>!ids.has(id)).map(([id,item])=>({...item,id}))];
+}
+try{
+ const raw=localStorage.getItem(STORAGE_KEY);lastStored=raw;
+ if(raw){
+  const saved=JSON.parse(raw);
+  if(saved.version!==1||!saved.items||Array.isArray(saved.items)||typeof saved.items!=='object'||
+  !Object.entries(saved.items).every(([id,item])=>/^(base:|new:)/.test(id)&&validItem(item)))throw Error('invalid');
+  overrides=saved.items;
+  status.textContent='已加载此浏览器保存的修改。';
+ }
+}catch(e){status.textContent='本地数据暂时无法读取，当前显示网站版本。请先检查浏览器存储设置。';}
+function refreshOptions(){
+ const p=prefix.value,t=tag.value;
+ prefix.replaceChildren(new Option('全部番号',''));tag.replaceChildren(new Option('全部标签',''));
+ for(const value of [...new Set(entries.map(item=>item.code.split('-')[0]))].sort())prefix.add(new Option(value,value));
+ for(const value of [...new Set(entries.flatMap(item=>item.tags))].sort((a,b)=>a.localeCompare(b,'zh-CN')))tag.add(new Option(value,value));
+ prefix.value=p;tag.value=t;
+ if(prefix.selectedIndex<0)prefix.value='';if(tag.selectedIndex<0)tag.value='';
+}
+function render(){
+ entries=combined(overrides);refreshOptions();
+ const filtered=entries.filter(item=>(!prefix.value||item.code.split('-')[0]===prefix.value)&&(!tag.value||item.tags.includes(tag.value)))
+ .sort((a,b)=>sort.value==='asc'?a.rating-b.rating:b.rating-a.rating);
+ document.querySelector('.catalog-count').textContent='共 '+filtered.length+' 个条目';list.replaceChildren();
+ if(!filtered.length){const p=document.createElement('p');p.className='empty';p.textContent=entries.length?'没有符合条件的条目，请调整筛选条件。':'暂无条目。';list.append(p);return;}
+ for(const item of filtered){
+  const article=document.createElement('article');article.className='catalog-entry';
+  const heading=document.createElement('div');heading.className='entry-heading';
+  const title=document.createElement('h2');title.textContent=item.code;
+  const edit=document.createElement('button');edit.type='button';edit.className='entry-edit';edit.textContent='编辑';edit.setAttribute('aria-label','编辑 '+item.code);edit.addEventListener('click',()=>openEditor(item.id));
+  heading.append(title,edit);article.append(heading);
+  const dl=document.createElement('dl');
+  for(const [label,value] of [['标签',item.tags.join('、')],['评分',item.rating+'/10'],['评论',item.comment]]){
+   if(label==='评论'&&!value)continue;
+   const group=document.createElement('div'),dt=document.createElement('dt'),dd=document.createElement('dd');
+   if(label==='评论')group.className='catalog-comment';
+   dt.textContent=label;dd.textContent=value;if(label==='评分')dd.className='rating';
+   group.append(dt,dd);dl.append(group);
   }
+  article.append(dl);list.append(article);
+ }
 }
+function openEditor(id=null){
+ editingId=id;form.reset();error.textContent='';
+ const item=entries.find(item=>item.id===id);
+ document.querySelector('#editor-title').textContent=item?'编辑条目':'新增条目';
+ if(item){form.elements.code.value=item.code;form.elements.rating.value=item.rating;form.elements.tags.value=item.tags.join('、');form.elements.comment.value=item.comment;}
+ dialog.showModal();form.elements.code.focus();
+}
+function persist(next){
+ try{
+ if(localStorage.getItem(STORAGE_KEY)!==lastStored)throw Error('changed');
+ const data=JSON.stringify({version:1,items:next});localStorage.setItem(STORAGE_KEY,data);lastStored=data;
+ }
+ catch(e){if(e.message==='changed')throw Error('另一个标签页修改了数据，请先导出当前内容，再刷新页面后重试。');throw Error('未能保存：浏览器存储不可用或空间不足。请保留表单内容，检查浏览器设置后重试。');}
+ overrides=next;
+}
+form.addEventListener('submit',event=>{
+ event.preventDefault();error.textContent='';
+ const item={code:form.elements.code.value.trim().toUpperCase(),rating:Number(form.elements.rating.value),
+ tags:[...new Set(form.elements.tags.value.split(/[,，、;；]/).map(t=>t.trim()).filter(Boolean))],comment:form.elements.comment.value.trim()};
+ if(!validItem(item)){error.textContent='请检查编号、标签长度和评分（0–10）。';return;}
+ if(entries.some(e=>e.id!==editingId&&e.code.toUpperCase()===item.code)){error.textContent='该编号已存在，请编辑已有条目或使用其他编号。';return;}
+ try{
+  persist({...overrides,[editingId||'new:'+crypto.randomUUID()]:item});
+  prefix.value='';tag.value='';render();dialog.close();status.textContent='已保存到本浏览器，尚未同步到公开网站。';
+ }catch(e){error.textContent=e.message;}
+});
+document.querySelector('#add-entry').addEventListener('click',()=>openEditor());
+document.querySelector('#cancel-edit').addEventListener('click',()=>dialog.close());
+document.querySelector('#reset-local').addEventListener('click',()=>{
+ if(!confirm('这会清除此浏览器的本地修改并恢复网站版本。请先导出需要保留的内容。是否继续？'))return;
+ try{localStorage.removeItem(STORAGE_KEY);lastStored=null;overrides={};prefix.value='';tag.value='';render();status.textContent='已恢复网站版本。';}
+ catch(e){status.textContent='无法清除本地数据，请检查浏览器存储设置。';}
+});
+document.querySelector('#export-entries').addEventListener('click',()=>{
+ const data={version:1,entries:entries.map(({id,...item})=>item)};
+ const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+ const link=document.createElement('a');link.href=url;link.download='collection-backup-'+new Date().toISOString().slice(0,10)+'.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ status.textContent='已生成备份文件，请确认浏览器已保存下载。';
+});
+document.querySelector('#import-entries').addEventListener('click',()=>document.querySelector('#backup-file').click());
+document.querySelector('#backup-file').addEventListener('change',async event=>{
+ const file=event.target.files[0];if(!file)return;
+ try{
+  if(file.size>2000000)throw Error('备份文件过大，请使用小于 2 MB 的文件。');
+  const data=JSON.parse(await file.text());
+  if(data.version!==1||!Array.isArray(data.entries)||!data.entries.every(validItem))throw Error('备份格式不正确，未导入。');
+  const seen=new Set();
+  for(const item of data.entries){const code=item.code.trim().toUpperCase();if(seen.has(code))throw Error('备份存在重复编号，未导入。');seen.add(code);}
+  if(!confirm('导入会覆盖本浏览器中相同编号的条目，并添加新条目。是否继续？'))return;
+  const next={...overrides};
+  for(const item of data.entries){const normalized={...item,code:item.code.trim().toUpperCase()};const old=entries.find(e=>e.code.toUpperCase()===normalized.code);next[old?.id||'new:'+crypto.randomUUID()]=normalized;}
+  persist(next);prefix.value='';tag.value='';render();status.textContent='备份已导入本浏览器，尚未同步到公开网站。';
+ }catch(e){status.textContent=e instanceof SyntaxError?'文件不是有效的 JSON 备份，未导入。':e.message;}
+ finally{event.target.value='';}
+});
 document.querySelector('.catalog-filters').addEventListener('change',render);
 document.querySelector('.catalog-filters').addEventListener('submit',event=>event.preventDefault());
+window.addEventListener('storage',event=>{if(event.key===STORAGE_KEY)status.textContent='另一个标签页修改了本地数据，请刷新页面后再继续编辑。';});
 render();
 </script>
 </body>
