@@ -14,10 +14,10 @@ select{width:100%;min-width:0;border:1px solid #bfc2b5;border-radius:3px;backgro
 select:focus-visible{outline:2px solid #34566f;outline-offset:4px}
 .catalog-count{font-size:13px;color:#777970;margin-bottom:12px}
 .catalog-entry{padding:24px 0;border-top:1px solid #deded5}
-.catalog-entry h2{font-size:21px;line-height:1.5;font-weight:500;margin:0 0 16px}
-.catalog-entry dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0}
-.catalog-entry dt{font-size:13px;color:#777970}.catalog-entry dd{margin:0;overflow-wrap:anywhere}
-.rating{font-variant-numeric:tabular-nums}.empty{color:#777970;padding-top:20px;border-top:1px solid #deded5}
+.catalog-entry h2{font-size:21px;line-height:1.5;font-weight:500;margin:0 0 20px}
+.catalog-entry dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0;max-width:460px}
+.catalog-entry dt{font-size:13px;color:#777970}.catalog-entry dd{margin:8px 0 0;overflow-wrap:anywhere}
+.rating{font-variant-numeric:tabular-nums;font-weight:600;color:#565f50}.empty{color:#777970;padding-top:20px;border-top:1px solid #deded5}
 @media(max-width:600px){.catalog-filters{grid-template-columns:1fr;gap:12px}.catalog-entry dl{gap:12px}}
 </style>
 </head>
@@ -32,7 +32,7 @@ select:focus-visible{outline:2px solid #34566f;outline-offset:4px}
 <a class="back-link" href="reviews.html">返回</a>
 <h1>收藏目录</h1>
 <form class="catalog-filters">
-<div><label for="prefix">编号前缀</label><select id="prefix" name="prefix"><option value="">全部编号</option></select></div>
+<div><label for="prefix">番号</label><select id="prefix" name="prefix"><option value="">全部番号</option></select></div>
 <div><label for="tag">标签</label><select id="tag" name="tag"><option value="">全部标签</option></select></div>
 <div><label for="sort">评分排序</label><select id="sort" name="sort"><option value="desc">从高到低</option><option value="asc">从低到高</option></select></div>
 </form>
@@ -43,7 +43,11 @@ select:focus-visible{outline:2px solid #34566f;outline-offset:4px}
 </div>
 <script>
 'use strict';
-const entries = [];
+const entries = [
+  {code:'MOOC-029',tags:['男娘'],rating:10,note:''},
+  {code:'KTRA-796',tags:['条纹过膝袜'],rating:9,note:''},
+  {code:'PRTD-027',tags:['女仆'],rating:8,note:'松本一香'}
+];
 const prefix = document.querySelector('#prefix');
 const tag = document.querySelector('#tag');
 const sort = document.querySelector('#sort');
@@ -68,7 +72,7 @@ function render() {
     for(const [label,value] of [['标签',item.tags.join('、')],['评分',item.rating+'/10'],['备注',item.note||'']]){
       const group=document.createElement('div');const dt=document.createElement('dt');const dd=document.createElement('dd');
       dt.textContent=label;dd.textContent=value;if(label==='评分')dd.className='rating';
-      if(label!=='备注'||value)group.append(dt,dd);dl.append(group);
+      if(label!=='备注'||value){group.append(dt,dd);dl.append(group);}
     }
     article.append(dl);list.append(article);
   }
