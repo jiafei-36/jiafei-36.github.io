@@ -15,10 +15,11 @@ select:focus-visible{outline:2px solid #34566f;outline-offset:4px}
 .catalog-count{font-size:13px;color:#777970;margin-bottom:12px}
 .catalog-entry{padding:24px 0;border-top:1px solid #deded5}
 .catalog-entry h2{font-size:21px;line-height:1.5;font-weight:500;margin:0 0 20px}
-.catalog-entry dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0;max-width:460px}
+.catalog-entry dl{display:grid;grid-template-columns:142px 142px minmax(0,1fr);gap:16px;margin:0;width:100%}
+.catalog-entry dl>div{min-width:0}
 .catalog-entry dt{font-size:13px;color:#777970}.catalog-entry dd{margin:8px 0 0;overflow-wrap:anywhere}
 .rating{font-variant-numeric:tabular-nums;font-weight:600;color:#565f50}.empty{color:#777970;padding-top:20px;border-top:1px solid #deded5}
-@media(max-width:600px){.catalog-filters{grid-template-columns:1fr;gap:12px}.catalog-entry dl{gap:12px}}
+@media(max-width:600px){.catalog-filters{grid-template-columns:1fr;gap:12px}.catalog-entry dl{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.catalog-comment{grid-column:1/-1}}
 </style>
 </head>
 <body>
@@ -44,9 +45,9 @@ select:focus-visible{outline:2px solid #34566f;outline-offset:4px}
 <script>
 'use strict';
 const entries = [
-  {code:'MOOC-029',tags:['男娘'],rating:9,note:'不开声音真的超可爱，可惜公鸭嗓太难听了'},
-  {code:'KTRA-796',tags:['条纹过膝袜'],rating:9,note:''},
-  {code:'PRTD-027',tags:['女仆'],rating:8,note:'松本一香'}
+  {code:'MOOC-029',tags:['男娘'],rating:9,comment:'不开声音真的超可爱，可惜公鸭嗓太难听了'},
+  {code:'KTRA-796',tags:['条纹过膝袜'],rating:9,comment:''},
+  {code:'PRTD-027',tags:['女仆'],rating:8,comment:'松本一香的表情很可爱，可惜没有我很喜欢的play'}
 ];
 const prefix = document.querySelector('#prefix');
 const tag = document.querySelector('#tag');
@@ -69,10 +70,11 @@ function render() {
     const article=document.createElement('article');article.className='catalog-entry';
     const title=document.createElement('h2');title.textContent=item.code;article.append(title);
     const dl=document.createElement('dl');
-    for(const [label,value] of [['标签',item.tags.join('、')],['评分',item.rating+'/10'],['备注',item.note||'']]){
+    for(const [label,value] of [['标签',item.tags.join('、')],['评分',item.rating+'/10'],['评论',item.comment||'']]){
       const group=document.createElement('div');const dt=document.createElement('dt');const dd=document.createElement('dd');
+      if(label==='评论')group.className='catalog-comment';
       dt.textContent=label;dd.textContent=value;if(label==='评分')dd.className='rating';
-      if(label!=='备注'||value){group.append(dt,dd);dl.append(group);}
+      if(label!=='评论'||value){group.append(dt,dd);dl.append(group);}
     }
     article.append(dl);list.append(article);
   }
