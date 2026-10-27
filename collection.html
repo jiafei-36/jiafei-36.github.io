@@ -29,9 +29,11 @@ button:hover{background:#eae8df}button:focus-visible,input:focus-visible,textare
 .local-notice,#save-status{font-size:13px;color:#676b61;line-height:1.8}
 .entry-heading{display:flex;gap:16px;align-items:baseline;justify-content:space-between;margin-bottom:20px}
 .entry-heading h2{margin:0;overflow-wrap:anywhere}.entry-edit{flex-shrink:0;font-size:13px;padding:2px 10px}
-#entry-dialog{box-sizing:border-box;width:min(600px,calc(100% - 32px));max-height:90dvh;overflow:auto;border:1px solid #bfc2b5;border-radius:5px;background:#f5f3ec;color:#30312e;padding:28px}
-#entry-dialog::backdrop{background:rgb(0 0 0 / 35%)}
-#entry-dialog h2{margin:0 0 20px;font-size:23px;font-weight:500}
+dialog{box-sizing:border-box;width:min(600px,calc(100% - 32px));max-height:90dvh;overflow:auto;border:1px solid #bfc2b5;border-radius:5px;background:#f5f3ec;color:#30312e;padding:28px}
+dialog::backdrop{background:rgb(0 0 0 / 35%)}
+dialog h2{margin:0 0 20px;font-size:23px;font-weight:500}
+#publish-error{color:#923d31;font-size:14px;overflow-wrap:anywhere}button:disabled{cursor:wait;opacity:.6}
+#publish-summary{font-size:14px;line-height:1.8}#publish-list{max-height:160px;overflow:auto;font-size:14px}
 .editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.editor-wide{grid-column:1/-1}
 .editor-grid input,.editor-grid textarea{box-sizing:border-box;width:100%;min-width:0;border:1px solid #bfc2b5;border-radius:3px;background:#faf8f2;color:#30312e;padding:9px 12px;font-size:16px}
 .editor-grid textarea{resize:vertical;min-height:130px}.editor-hint{font-size:12px;color:#676b61;margin:4px 0 0}
@@ -51,12 +53,13 @@ button:hover{background:#eae8df}button:focus-visible,input:focus-visible,textare
 <h1>收藏目录</h1>
 <div class="catalog-tools">
 <button type="button" id="add-entry">新增条目</button>
+<button type="button" id="publish-entries">保存到 GitHub</button>
 <button type="button" id="export-entries">导出备份</button>
 <button type="button" id="import-entries">导入备份</button>
 <button type="button" id="reset-local">恢复网站版本</button>
 <input id="backup-file" type="file" accept=".json,application/json" hidden>
 </div>
-<p class="local-notice">免密码本地编辑：修改仅保存在当前浏览器，不会同步到公开网站或其他设备。清理浏览器数据前请导出备份。</p>
+<p class="local-notice">编辑后先保存为本地草稿；点击“保存到 GitHub”发布后，其他设备也能看到。发布需要 GitHub 写入授权。清理浏览器数据前请先发布或导出备份。</p>
 <p id="save-status" role="status" aria-live="polite"></p>
 <form class="catalog-filters">
 <div><label for="prefix">番号</label><select id="prefix" name="prefix"><option value="">全部番号</option></select></div>
@@ -79,15 +82,37 @@ button:hover{background:#eae8df}button:focus-visible,input:focus-visible,textare
 <div class="editor-actions"><button type="submit">保存到本浏览器</button><button type="button" id="cancel-edit">取消</button></div>
 </form>
 </dialog>
+<dialog id="publish-dialog" aria-labelledby="publish-title">
+<form id="publish-form">
+<h2 id="publish-title">保存到 GitHub</h2>
+<p id="publish-summary"></p>
+<ul id="publish-list"></ul>
+<p class="editor-hint">将更新 jiafei-36/jiafei-36.github.io 的收藏目录，内容会公开，并保留在 GitHub 提交历史中。</p>
+<details>
+<summary>首次使用：创建 GitHub 授权令牌</summary>
+<ol class="editor-hint">
+<li><a href="https://github.com/settings/personal-access-tokens/new?name=Collection-editor&amp;target_name=jiafei-36&amp;expires_in=30&amp;contents=write" target="_blank" rel="noopener noreferrer">打开 GitHub 创建令牌</a>，使用 jiafei-36 账号。</li>
+<li>Repository access 选择 Only select repositories，只勾选 jiafei-36.github.io。</li>
+<li>确认 Repository permissions 中 Contents 为 Read and write，然后点击 Generate token。</li>
+<li>复制生成的令牌，回到此处填写。令牌过期后需要重新创建。</li>
+</ol>
+</details>
+<div class="editor-grid" style="margin-top:16px">
+<div class="editor-wide"><label for="github-token">GitHub 授权令牌</label><input id="github-token" type="password" required autocomplete="off" spellcheck="false" autocapitalize="none"><p class="editor-hint">仅发送给 GitHub；不保存在浏览器或网站中。不要在聊天里发送令牌。</p></div>
+</div>
+<p id="publish-error" role="alert"></p>
+<div class="editor-actions"><button type="submit" id="confirm-publish">确认发布</button><button type="button" id="cancel-publish">取消</button></div>
+</form>
+</dialog>
 </main>
 </div>
 <script>
 'use strict';
-const publishedEntries = [
-  {code:'MOOC-029',tags:['男娘'],rating:9,comment:'不开声音真的超可爱，可惜公鸭嗓太难听了'},
-  {code:'KTRA-796',tags:['条纹过膝袜'],rating:9,comment:''},
-  {code:'PRTD-027',tags:['女仆'],rating:8,comment:'松本一香的表情很可爱，可惜没有我很喜欢的play'}
-];
+let publishedEntries = /* COLLECTION_DATA_START */ [
+  {"id":"base:MOOC-029","code":"MOOC-029","tags":["男娘"],"rating":9,"comment":"不开声音真的超可爱，可惜公鸭嗓太难听了"},
+  {"id":"base:KTRA-796","code":"KTRA-796","tags":["条纹过膝袜"],"rating":9,"comment":""},
+  {"id":"base:PRTD-027","code":"PRTD-027","tags":["女仆"],"rating":8,"comment":"松本一香的表情很可爱，可惜没有我很喜欢的play"}
+] /* COLLECTION_DATA_END */;
 
 const STORAGE_KEY='jiafei-36.collection.edits.v1';
 const prefix=document.querySelector('#prefix'),tag=document.querySelector('#tag'),sort=document.querySelector('#sort'),list=document.querySelector('.catalog-list');
@@ -100,8 +125,8 @@ function validItem(item){
  typeof item.comment==='string'&&item.comment.length<=10000;
 }
 function combined(data){
- const ids=new Set(publishedEntries.map(item=>'base:'+item.code));
- return [...publishedEntries.map(item=>({...item,...data['base:'+item.code],id:'base:'+item.code})),
+ const ids=new Set(publishedEntries.map(item=>item.id));
+ return [...publishedEntries.map(item=>({...item,...data[item.id],id:item.id})),
  ...Object.entries(data).filter(([id])=>!ids.has(id)).map(([id,item])=>({...item,id}))];
 }
 try{
@@ -203,7 +228,104 @@ document.querySelector('#backup-file').addEventListener('change',async event=>{
 document.querySelector('.catalog-filters').addEventListener('change',render);
 document.querySelector('.catalog-filters').addEventListener('submit',event=>event.preventDefault());
 window.addEventListener('storage',event=>{if(event.key===STORAGE_KEY)status.textContent='另一个标签页修改了本地数据，请刷新页面后再继续编辑。';});
+
+const githubFileAPI='https://api.github.com/repos/jiafei-36/jiafei-36.github.io/contents/collection.html';
+const publishDialog=document.querySelector('#publish-dialog'),publishForm=document.querySelector('#publish-form'),publishError=document.querySelector('#publish-error'),tokenInput=document.querySelector('#github-token');
+let publishing=false;
+function itemData(item){return {code:item.code,tags:[...item.tags],rating:item.rating,comment:item.comment};}
+function sameItem(a,b){return !!a&&!!b&&JSON.stringify(itemData(a))===JSON.stringify(itemData(b));}
+function pendingChanges(){return Object.entries(overrides).filter(([id,item])=>!sameItem(item,publishedEntries.find(p=>p.id===id)));}
+function parsePublished(source){
+ const start='/* COLLECTION_'+'DATA_START */',end='/* COLLECTION_'+'DATA_END */';
+ const from=source.indexOf(start),to=source.indexOf(end,from+start.length);
+ if(from<0||to<0)throw Error('网站代码已更改，请导出草稿并刷新页面后重试。');
+ let items;try{items=JSON.parse(source.slice(from+start.length,to));}catch(e){throw Error('GitHub 中的目录数据无法读取，未发布。');}
+ if(!Array.isArray(items)||!items.every(i=>validItem(i)&&typeof i.id==='string'&&/^(base:|new:)/.test(i.id))||new Set(items.map(i=>i.id)).size!==items.length)throw Error('GitHub 中的目录数据格式不正确，未发布。');
+ return {items,from:from+start.length,to};
+}
+function mergeForPublish(remote,changes){
+ const merged=remote.map(i=>({...itemData(i),id:i.id}));
+ for(const [id,item] of changes){
+  const base=publishedEntries.find(p=>p.id===id),index=merged.findIndex(p=>p.id===id),current=merged[index];
+  if(!sameItem(current,item)&&((base&&!sameItem(current,base))||(!base&&current)))throw Error('条目 '+item.code+' 已在其他设备修改。请先导出备份，再刷新并核对该条目后发布。');
+  const next={...itemData(item),id};if(index>=0)merged[index]=next;else merged.push(next);
+ }
+ const codes=merged.map(i=>i.code.trim().toUpperCase());
+ if(new Set(codes).size!==codes.length)throw Error('GitHub 中已存在相同编号。请刷新并核对条目，未发布。');
+ return merged;
+}
+function encodeUTF8(text){
+ const bytes=new TextEncoder().encode(text);let binary='';
+ for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));
+ return btoa(binary);
+}
+function decodeUTF8(text){return new TextDecoder('utf-8',{fatal:true}).decode(Uint8Array.from(atob(text.replace(/\s/g,'')),c=>c.charCodeAt(0)));}
+function replacePublished(source,parsed,items){
+ const json=JSON.stringify(items,null,2).replace(/</g,'\\u003c').replace(/\//g,'\\u002f').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');
+ return source.slice(0,parsed.from)+' '+json+' '+source.slice(parsed.to);
+}
+async function githubRequest(token,method='GET',body){
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),30000);
+ try{
+  const response=await fetch(githubFileAPI+(method==='GET'?'?ref=main':''),{
+   method,cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer',redirect:'error',signal:controller.signal,
+   headers:{Accept:'application/vnd.github+json',Authorization:'Bearer '+token,'X-GitHub-Api-Version':'2022-11-28',...(body?{'Content-Type':'application/json'}:{})},
+   ...(body?{body:JSON.stringify(body)}:{})
+  });
+  if(!response.ok){
+   if(response.status===401)throw Error('授权令牌无效或已过期，请重新填写。');
+   if(response.status===403||response.status===404)throw Error('无法访问仓库，请确认令牌授权了 jiafei-36.github.io 的 Contents: Read and write；也可能是 GitHub 请求额度已用完。');
+   if(response.status===409||response.status===422)throw Error('GitHub 文件已更新，或仓库规则不允许直接提交。草稿已保留，请重试或检查仓库设置。');
+   throw Error('GitHub 暂时无法完成请求（'+response.status+'），草稿已保留。');
+  }
+  return await response.json();
+ }catch(e){
+  if(e.name==='AbortError'||e instanceof TypeError)throw Error(method==='PUT'?'未收到 GitHub 的保存确认，草稿已保留。请重试，系统会先核对是否已保存。':'无法连接 GitHub，草稿已保留。请检查网络后重试。');
+  throw e;
+ }finally{clearTimeout(timer);}
+}
+document.querySelector('#publish-entries').addEventListener('click',()=>{
+ const changes=pendingChanges();publishError.textContent='';tokenInput.value='';
+ if(!changes.length){status.textContent='没有待发布的本地修改。';return;}
+ document.querySelector('#publish-summary').textContent='将发布 '+changes.length+' 个新增或修改的条目。';
+ const preview=document.querySelector('#publish-list');preview.replaceChildren();
+ for(const [,item] of changes){const li=document.createElement('li');li.textContent=item.code+' · '+item.rating+'/10';preview.append(li);}
+ publishDialog.showModal();
+});
+document.querySelector('#cancel-publish').addEventListener('click',()=>publishDialog.close());
+publishDialog.addEventListener('cancel',event=>{if(publishing)event.preventDefault();});
+publishDialog.addEventListener('close',()=>{tokenInput.value='';});
+publishForm.addEventListener('submit',async event=>{
+ event.preventDefault();if(publishing)return;
+ let token=tokenInput.value.trim();if(!token){publishError.textContent='请填写 GitHub 授权令牌。';return;}
+ publishing=true;publishError.textContent='正在核对 GitHub 中的最新版本…';
+ const buttons=[...publishForm.querySelectorAll('button')];buttons.forEach(b=>b.disabled=true);tokenInput.disabled=true;
+ try{
+  if(localStorage.getItem(STORAGE_KEY)!==lastStored)throw Error('另一个标签页修改了草稿，请先刷新后再发布。');
+  const changes=pendingChanges();
+  const file=await githubRequest(token);
+  if(file.encoding!=='base64'||typeof file.content!=='string'||!file.sha)throw Error('GitHub 未返回可编辑的文件，草稿已保留。');
+  const source=decodeUTF8(file.content),parsed=parsePublished(source),merged=mergeForPublish(parsed.items,changes);
+  if(localStorage.getItem(STORAGE_KEY)!==lastStored)throw Error('另一个标签页修改了草稿，请先刷新后再发布。');
+  const unchanged=merged.length===parsed.items.length&&merged.every((item,index)=>item.id===parsed.items[index].id&&sameItem(item,parsed.items[index]));
+  if(!unchanged){
+   publishError.textContent='正在保存到 GitHub…';
+   await githubRequest(token,'PUT',{message:'Update collection entries from website editor',branch:'main',sha:file.sha,content:encodeUTF8(replacePublished(source,parsed,merged))});
+  }
+  publishedEntries=merged;render();publishDialog.close();
+  status.textContent='已保存到 GitHub。网站更新通常需要稍等片刻；可在 GitHub 查看发布进度。本地草稿暂时保留，刷新到新版后会自动清理。';
+  const progress=document.createElement('a');progress.href='https://github.com/jiafei-36/jiafei-36.github.io/actions';progress.target='_blank';progress.rel='noopener noreferrer';progress.textContent='查看发布进度';status.append(' ',progress);
+  if(localStorage.getItem(STORAGE_KEY)!==lastStored)status.append(' 另一个标签页有更新，请刷新后继续编辑。');
+ }catch(e){publishError.textContent=e.message;}
+ finally{token='';tokenInput.value='';tokenInput.disabled=false;buttons.forEach(b=>b.disabled=false);publishing=false;}
+});
+// Only discard a draft after the deployed page itself contains the same values.
+try{
+ const pending=Object.fromEntries(pendingChanges());
+ if(Object.keys(pending).length!==Object.keys(overrides).length){persist(pending);status.textContent=Object.keys(pending).length?'已加载尚未发布的本地草稿。':'本地修改已发布到网站。';}
+}catch(e){status.textContent=e.message;}
 render();
 </script>
 </body>
 </html>
+
