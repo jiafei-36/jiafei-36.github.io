@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>收藏目录 · jiafei-36</title>
+<link rel="icon" href="github-avatar.jpg" type="image/jpeg">
+<link rel="stylesheet" href="styles.css">
+<style>
+.catalog-filters{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:16px;margin:32px 0 24px}
+label{display:block;font-size:14px;margin-bottom:8px}
+select{width:100%;min-width:0;border:1px solid #bfc2b5;border-radius:3px;background:#faf8f2;color:#30312e;padding:9px 12px;font:inherit;font-size:14px}
+select:focus-visible{outline:2px solid #34566f;outline-offset:4px}
+.catalog-count{font-size:13px;color:#777970;margin-bottom:12px}
+.catalog-entry{padding:24px 0;border-top:1px solid #deded5}
+.catalog-entry h2{font-size:21px;line-height:1.5;font-weight:500;margin:0 0 16px}
+.catalog-entry dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0}
+.catalog-entry dt{font-size:13px;color:#777970}.catalog-entry dd{margin:0;overflow-wrap:anywhere}
+.rating{font-variant-numeric:tabular-nums}.empty{color:#777970;padding-top:20px;border-top:1px solid #deded5}
+@media(max-width:600px){.catalog-filters{grid-template-columns:1fr;gap:12px}.catalog-entry dl{gap:12px}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">跳到正文</a>
+<div class="site">
+<header class="site-header">
+<a class="site-brand" href="./"><img src="github-avatar.jpg" alt="" width="28" height="28"><span>jiafei-36</span></a>
+<nav aria-label="页面导航"><a href="./">返回表站</a></nav>
+</header>
+<main id="main" class="content-page">
+<a class="back-link" href="reviews.html">返回</a>
+<h1>收藏目录</h1>
+<form class="catalog-filters">
+<div><label for="prefix">编号前缀</label><select id="prefix" name="prefix"><option value="">全部编号</option></select></div>
+<div><label for="tag">标签</label><select id="tag" name="tag"><option value="">全部标签</option></select></div>
+<div><label for="sort">评分排序</label><select id="sort" name="sort"><option value="desc">从高到低</option><option value="asc">从低到高</option></select></div>
+</form>
+<p class="catalog-count" role="status" aria-live="polite">共 0 个条目</p>
+<div class="catalog-list"><p class="empty">暂无条目。</p></div>
+<noscript><p>筛选和排序功能需要启用 JavaScript。</p></noscript>
+</main>
+</div>
+<script>
+'use strict';
+const entries = [];
+const prefix = document.querySelector('#prefix');
+const tag = document.querySelector('#tag');
+const sort = document.querySelector('#sort');
+const list = document.querySelector('.catalog-list');
+function addOptions(select, values) {
+  [...new Set(values)].sort((a,b)=>a.localeCompare(b,'zh-CN')).forEach(value=>{
+    const option=document.createElement('option');option.value=value;option.textContent=value;select.append(option);
+  });
+}
+addOptions(prefix,entries.map(item=>item.code.split('-')[0]));
+addOptions(tag,entries.flatMap(item=>item.tags));
+function render() {
+  const filtered=entries.filter(item=>(!prefix.value||item.code.split('-')[0]===prefix.value)&&(!tag.value||item.tags.includes(tag.value)))
+    .sort((a,b)=>sort.value==='asc'?a.rating-b.rating:b.rating-a.rating);
+  document.querySelector('.catalog-count').textContent='共 '+filtered.length+' 个条目';
+  list.replaceChildren();
+  if(!filtered.length){const p=document.createElement('p');p.className='empty';p.textContent=entries.length?'没有符合条件的条目，请调整筛选条件。':'暂无条目。';list.append(p);return;}
+  for(const item of filtered){
+    const article=document.createElement('article');article.className='catalog-entry';
+    const title=document.createElement('h2');title.textContent=item.code;article.append(title);
+    const dl=document.createElement('dl');
+    for(const [label,value] of [['标签',item.tags.join('、')],['评分',item.rating+'/10'],['备注',item.note||'']]){
+      const group=document.createElement('div');const dt=document.createElement('dt');const dd=document.createElement('dd');
+      dt.textContent=label;dd.textContent=value;if(label==='评分')dd.className='rating';
+      if(label!=='备注'||value)group.append(dt,dd);dl.append(group);
+    }
+    article.append(dl);list.append(article);
+  }
+}
+document.querySelector('.catalog-filters').addEventListener('change',render);
+document.querySelector('.catalog-filters').addEventListener('submit',event=>event.preventDefault());
+render();
+</script>
+</body>
+</html>
