@@ -47,6 +47,7 @@ dialog h2{margin:0 0 20px;font-size:23px;font-weight:500}
 .tag-chip{display:inline-flex;align-items:baseline;gap:.22em;max-width:100%;padding:4px 11px;border-radius:9px;background:#ece9e1;color:#605c55;line-height:1.5;font-size:14px}
 .tag-chip::before{content:"#";color:#aaa699}
 @media(max-width:600px){.catalog-filters,.catalog-entry dl{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.entry-actions{display:flex;gap:8px;flex-shrink:0}.entry-delete{color:#884537}
 </style>
 </head>
 <body>
@@ -351,16 +352,17 @@ function validDate(value){
 }
 function combined(data){
  const ids=new Set(publishedEntries.map(item=>item.id));
- return [...publishedEntries.map(item=>({...item,...data[item.id],id:item.id})),
- ...Object.entries(data).filter(([id])=>!ids.has(id)).map(([id,item])=>({...item,id}))];
+ return [...publishedEntries.filter(item=>!data[item.id]?.deleted).map(item=>({...item,...data[item.id],id:item.id})),
+ ...Object.entries(data).filter(([id,item])=>!item.deleted&&!ids.has(id)).map(([id,item])=>({...item,id}))];
 }
 try{
  const raw=localStorage.getItem(STORAGE_KEY);lastStored=raw;
  if(raw){
   const saved=JSON.parse(raw);
   if(![1,2].includes(saved.version)||!saved.items||Array.isArray(saved.items)||typeof saved.items!=='object'||
-  !Object.entries(saved.items).every(([id,item])=>/^(base:|new:)/.test(id)&&validItem(item)))throw Error('invalid');
+  !Object.entries(saved.items).every(([id,item])=>/^(base:|new:)/.test(id)&&(validItem(item)||(item?.deleted===true&&validItem(item.original)))))throw Error('invalid');
   overrides=Object.fromEntries(Object.entries(saved.items).map(([id,item])=>{
+   if(item.deleted===true)return [id,item];
    const base=publishedEntries.find(entry=>entry.id===id);
    return [id,itemData({...base,...item})];
   }));
@@ -406,7 +408,11 @@ function render(){
   const heading=document.createElement('div');heading.className='entry-heading';
   const title=document.createElement('h2');title.textContent=item.code;
   const edit=document.createElement('button');edit.type='button';edit.className='entry-edit';edit.textContent='编辑';edit.setAttribute('aria-label','编辑 '+item.code);edit.addEventListener('click',()=>openEditor(item.id));
-  heading.append(title,edit);article.append(heading);
+  const actions=document.createElement('div');actions.className='entry-actions';
+  const remove=document.createElement('button');remove.type='button';remove.className='entry-edit entry-delete';
+  remove.textContent='删除';remove.setAttribute('aria-label','删除 '+item.code);
+  remove.addEventListener('click',()=>deleteEntry(item));
+  actions.append(edit,remove);heading.append(title,actions);article.append(heading);
   const dl=document.createElement('dl');
   for(const [key,label] of Object.entries(fields)){
    if(key==='code')continue;
@@ -431,6 +437,18 @@ function render(){
   }
   article.append(dl);list.append(article);
  }
+}
+function deleteEntry(item){
+ const original=publishedEntries.find(entry=>entry.id===item.id);
+ const message=original?'删除「'+item.code+'」？保存到 GitHub 后，公开目录也会移除此条目。':'删除本地新增的「'+item.code+'」？';
+ if(!confirm(message))return;
+ const next={...overrides};
+ if(original)next[item.id]={deleted:true,original:itemData(original)};
+ else delete next[item.id];
+ try{
+  persist(next);render();
+  status.textContent=original?'已标记删除 '+item.code+'，可点击“保存到 GitHub”发布。':'已删除本地草稿 '+item.code+'。';
+ }catch(e){status.textContent=e.message;}
 }
 function openEditor(id=null){
  editingId=id;form.reset();pasteInput.setCustomValidity('');error.textContent='';
@@ -546,7 +564,10 @@ function itemData(item){
  return data;
 }
 function sameItem(a,b){return !!a&&!!b&&JSON.stringify(itemData(a))===JSON.stringify(itemData(b));}
-function pendingChanges(){return Object.entries(overrides).filter(([id,item])=>!sameItem(item,publishedEntries.find(p=>p.id===id)));}
+function pendingChanges(){return Object.entries(overrides).filter(([id,item])=>{
+ const base=publishedEntries.find(p=>p.id===id);
+ return item.deleted?Boolean(base):!sameItem(item,base);
+});}
 function parsePublished(source){
  const start='/* COLLECTION_'+'DATA_START */',end='/* COLLECTION_'+'DATA_END */';
  const from=source.indexOf(start),to=source.indexOf(end,from+start.length);
@@ -559,6 +580,11 @@ function mergeForPublish(remote,changes){
  const merged=remote.map(i=>({...itemData(i),id:i.id}));
  for(const [id,item] of changes){
   const base=publishedEntries.find(p=>p.id===id),index=merged.findIndex(p=>p.id===id),current=merged[index];
+  if(item.deleted){
+   if(current&&!sameItem(current,item.original))throw Error('条目 '+item.original.code+' 已在 GitHub 上修改，删除未发布。请恢复网站版本并核对后重试。');
+   if(current)merged.splice(index,1);
+   continue;
+  }
   if(!sameItem(current,item)&&((base&&!sameItem(current,base))||(!base&&current)))throw Error('条目 '+item.code+' 已在其他设备修改。请先导出备份，再刷新并核对该条目后发布。');
   const next={...itemData(item),id};if(index>=0)merged[index]=next;else merged.push(next);
  }
@@ -599,9 +625,9 @@ async function githubRequest(token,method='GET',body){
 document.querySelector('#publish-entries').addEventListener('click',()=>{
  const changes=pendingChanges();publishError.textContent='';tokenInput.value='';
  if(!changes.length){status.textContent='没有待发布的本地修改。';return;}
- document.querySelector('#publish-summary').textContent='将发布 '+changes.length+' 个新增或修改的条目。';
+ document.querySelector('#publish-summary').textContent='将发布 '+changes.length+' 项条目变更。';
  const preview=document.querySelector('#publish-list');preview.replaceChildren();
- for(const [,item] of changes){const li=document.createElement('li');li.textContent=[item.code,item.chineseTitle||item.originalTitle].filter(Boolean).join(' · ');preview.append(li);}
+ for(const [,item] of changes){const li=document.createElement('li');li.textContent=item.deleted?'删除 · '+item.original.code:[item.code,item.chineseTitle||item.originalTitle].filter(Boolean).join(' · ');preview.append(li);}
  publishDialog.showModal();
 });
 document.querySelector('#cancel-publish').addEventListener('click',()=>publishDialog.close());
