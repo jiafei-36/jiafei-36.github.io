@@ -47,6 +47,7 @@ dialog h2{margin:0 0 20px;font-size:23px;font-weight:500}
 .tag-chip{display:inline-flex;align-items:baseline;gap:.22em;max-width:100%;padding:4px 11px;border-radius:9px;background:#ece9e1;color:#605c55;line-height:1.5;font-size:14px}
 .tag-chip::before{content:"#";color:#aaa699}
 @media(max-width:600px){.catalog-filters,.catalog-entry dl{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.catalog-sorts{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:inherit}
 </style>
 </head>
 <body>
@@ -70,12 +71,15 @@ dialog h2{margin:0 0 20px;font-size:23px;font-weight:500}
 <p class="local-notice">编辑后先保存为本地草稿；点击“保存到 GitHub”发布后，其他设备也能看到。发布需要 GitHub 写入授权。清理浏览器数据前请先发布或导出备份。</p>
 <p id="save-status" role="status" aria-live="polite"></p>
 <form class="catalog-filters">
-<div><label for="prefix">番号前缀</label><select id="prefix"><option value="">全部番号前缀</option></select></div>
-<div><label for="actor">演员</label><select id="actor"><option value="">全部演员</option></select></div>
-<div><label for="studio">厂商</label><select id="studio"><option value="">全部厂商</option></select></div>
-<div><label for="series">系列</label><select id="series"><option value="">全部系列</option></select></div>
-<div><label for="tag">标签</label><select id="tag"><option value="">全部标签</option></select></div>
-<div><label for="sort">排序</label><select id="sort"><option value="released-desc">发布时间 · 从新到旧</option><option value="released-asc">发布时间 · 从旧到新</option><option value="minutes-desc">时长 · 从长到短</option><option value="minutes-asc">时长 · 从短到长</option></select></div>
+<div><label for="prefix">番号前缀</label><select id="prefix"><option value="">全部</option></select></div>
+<div><label for="actor">演员</label><select id="actor"><option value="">全部</option></select></div>
+<div><label for="studio">厂商</label><select id="studio"><option value="">全部</option></select></div>
+<div><label for="series">系列</label><select id="series"><option value="">全部</option></select></div>
+<div><label for="tag">标签</label><select id="tag"><option value="">全部</option></select></div>
+<div class="catalog-sorts">
+<div><label for="release-sort">发布时间排序</label><select id="release-sort"><option value="">不排序</option><option value="desc" selected>从新到旧</option><option value="asc">从旧到新</option></select></div>
+<div><label for="duration-sort">时长排序</label><select id="duration-sort"><option value="">不排序</option><option value="desc">从长到短</option><option value="asc">从短到长</option></select></div>
+</div>
 </form>
 <p class="catalog-count" role="status" aria-live="polite">共 0 个条目</p>
 <div class="catalog-list"><p class="empty">暂无条目。</p></div>
@@ -333,7 +337,9 @@ let publishedEntries = /* COLLECTION_DATA_START */ [
 const STORAGE_KEY='jiafei-36.collection.edits.v1';
 const fields={"code":"番号","originalTitle":"原标题","chineseTitle":"中文标题","actors":"出演","studio":"厂商","series":"系列","released":"发布时间","minutes":"时长","tags":"标签"};
 const filterLabels={"prefix":"番号前缀","actor":"演员","studio":"厂商","series":"系列","tag":"标签"};
-const sort=document.querySelector('#sort'),list=document.querySelector('.catalog-list');
+const releaseSort=document.querySelector('#release-sort');
+const durationSort=document.querySelector('#duration-sort');
+const list=document.querySelector('.catalog-list');
 const status=document.querySelector('#save-status'),dialog=document.querySelector('#entry-dialog'),form=document.querySelector('#entry-form'),error=document.querySelector('#editor-error');
 let overrides={},editingId=null,entries=[],lastStored=null;
 function validItem(item){
@@ -376,11 +382,11 @@ function filterValues(item,key){
  }
 }
 function refreshOptions(){
- for(const [key,label] of Object.entries(filterLabels)){
+ for(const key of Object.keys(filterLabels)){
   const select=document.getElementById(key);
   const previous=select.value;
   const values=[...new Set(entries.flatMap(item=>filterValues(item,key)).filter(Boolean))];
-  select.replaceChildren(new Option('全部'+label,''));
+  select.replaceChildren(new Option('全部',''));
   for(const value of values.sort((a,b)=>a.localeCompare(b,'zh-CN'))) select.add(new Option(value,value));
   select.value=values.includes(previous)?previous:'';
  }
@@ -390,10 +396,11 @@ function resetFilters(){
 }
 function render(){
  entries=combined(overrides);refreshOptions();
- const [order,direction]=sort.value.split('-');
+ const order=durationSort.value?'minutes':'released';
+ const direction=durationSort.value||releaseSort.value;
  const active=Object.keys(filterLabels).map(key=>[key,document.getElementById(key).value]).filter(([,v])=>v);
  const filtered=entries.filter(item=>active.every(([key,value])=>filterValues(item,key).includes(value)));
- filtered.sort((a,b)=>{
+ if(direction) filtered.sort((a,b)=>{
   const left=a[order],right=b[order];
   if(!left||!right) return Number(!left)-Number(!right);
   const diff=order==='minutes'?left-right:left.localeCompare(right);
@@ -531,7 +538,12 @@ document.querySelector('#backup-file').addEventListener('change',async event=>{
  }catch(e){status.textContent=e instanceof SyntaxError?'文件不是有效的 JSON 备份，未导入。':e.message;}
  finally{event.target.value='';}
 });
-document.querySelector('.catalog-filters').addEventListener('change',render);
+document.querySelector('.catalog-filters').addEventListener('change',event=>{
+ const changed=event.target;
+ if(changed===releaseSort && changed.value)durationSort.value='';
+ if(changed===durationSort && changed.value)releaseSort.value='';
+ render();
+});
 document.querySelector('.catalog-filters').addEventListener('submit',event=>event.preventDefault());
 window.addEventListener('storage',event=>{if(event.key===STORAGE_KEY)status.textContent='另一个标签页修改了本地数据，请刷新页面后再继续编辑。';});
 
