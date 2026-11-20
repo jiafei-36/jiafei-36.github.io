@@ -39,6 +39,14 @@ dialog h2{margin:0 0 20px;font-size:23px;font-weight:500}
 .editor-grid textarea{resize:vertical;min-height:130px}.editor-hint{font-size:12px;color:#676b61;margin:4px 0 0}
 #editor-error{color:#923d31;font-size:14px;margin:16px 0 0}.editor-actions{margin-top:20px}
 @media(max-width:600px){#entry-dialog{padding:20px}.editor-grid{grid-template-columns:1fr}.editor-wide{grid-column:auto}}
+.catalog-filters{grid-template-columns:repeat(3,minmax(0,1fr))}
+.catalog-entry dl{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 20px}
+.catalog-entry dd{margin:3px 0 0;min-height:1em}
+.catalog-entry .wide-field{grid-column:1/-1}
+.tag-list{display:flex;flex-wrap:wrap;gap:6px}
+.tag-chip{display:inline-flex;align-items:baseline;gap:.22em;max-width:100%;padding:4px 11px;border-radius:9px;background:#ece9e1;color:#605c55;line-height:1.5;font-size:14px}
+.tag-chip::before{content:"#";color:#aaa699}
+@media(max-width:600px){.catalog-filters,.catalog-entry dl{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
 <body>
@@ -62,9 +70,12 @@ dialog h2{margin:0 0 20px;font-size:23px;font-weight:500}
 <p class="local-notice">编辑后先保存为本地草稿；点击“保存到 GitHub”发布后，其他设备也能看到。发布需要 GitHub 写入授权。清理浏览器数据前请先发布或导出备份。</p>
 <p id="save-status" role="status" aria-live="polite"></p>
 <form class="catalog-filters">
-<div><label for="prefix">番号</label><select id="prefix" name="prefix"><option value="">全部番号</option></select></div>
-<div><label for="tag">标签</label><select id="tag" name="tag"><option value="">全部标签</option></select></div>
-<div><label for="sort">评分排序</label><select id="sort" name="sort"><option value="desc">从高到低</option><option value="asc">从低到高</option></select></div>
+<div><label for="prefix">番号前缀</label><select id="prefix"><option value="">全部番号前缀</option></select></div>
+<div><label for="actor">演员</label><select id="actor"><option value="">全部演员</option></select></div>
+<div><label for="studio">厂商</label><select id="studio"><option value="">全部厂商</option></select></div>
+<div><label for="series">系列</label><select id="series"><option value="">全部系列</option></select></div>
+<div><label for="tag">标签</label><select id="tag"><option value="">全部标签</option></select></div>
+<div><label for="sort">排序</label><select id="sort"><option value="released-desc">发布时间 · 从新到旧</option><option value="released-asc">发布时间 · 从旧到新</option><option value="minutes-desc">时长 · 从长到短</option><option value="minutes-asc">时长 · 从短到长</option></select></div>
 </form>
 <p class="catalog-count" role="status" aria-live="polite">共 0 个条目</p>
 <div class="catalog-list"><p class="empty">暂无条目。</p></div>
@@ -73,10 +84,16 @@ dialog h2{margin:0 0 20px;font-size:23px;font-weight:500}
 <form id="entry-form">
 <h2 id="editor-title">新增条目</h2>
 <div class="editor-grid">
-<div><label for="entry-code">条目编号</label><input id="entry-code" name="code" required maxlength="80" autocomplete="off" placeholder="例如 ABC-001"></div>
-<div><label for="entry-rating">评分（0–10）</label><input id="entry-rating" name="rating" type="number" min="0" max="10" step="0.1" required></div>
-<div class="editor-wide"><label for="entry-tags">标签</label><input id="entry-tags" name="tags" maxlength="300" autocomplete="off"><p class="editor-hint">多个标签用逗号或顿号分隔。</p></div>
-<div class="editor-wide"><label for="entry-comment">评论</label><textarea id="entry-comment" name="comment" maxlength="10000"></textarea></div>
+<div class="editor-wide" id="paste-row"><label for="entry-paste">粘贴条目资料</label><textarea id="entry-paste" rows="6" placeholder="番号：ABC-001&#10;原标题：…&#10;出演：…&#10;发布时间：2009年7月24日&#10;时长：120分钟"></textarea><p class="editor-hint">每行一个字段，粘贴后自动填入下方，可继续修改。</p></div>
+<div><label for="entry-code">番号</label><input id="entry-code" name="code" maxlength="80" required></div>
+<div class="editor-wide"><label for="entry-originalTitle">原标题</label><input id="entry-originalTitle" name="originalTitle" maxlength="2000"></div>
+<div class="editor-wide"><label for="entry-chineseTitle">中文标题</label><input id="entry-chineseTitle" name="chineseTitle" maxlength="2000"></div>
+<div><label for="entry-actors">出演</label><input id="entry-actors" name="actors" maxlength="2000"></div>
+<div><label for="entry-studio">厂商</label><input id="entry-studio" name="studio" maxlength="2000"></div>
+<div><label for="entry-series">系列</label><input id="entry-series" name="series" maxlength="2000"></div>
+<div><label for="entry-released">发布时间</label><input id="entry-released" name="released" type="date"></div>
+<div><label for="entry-minutes">时长（分钟）</label><input id="entry-minutes" name="minutes" type="number" min="1" step="1"></div>
+<div class="editor-wide"><label for="entry-tags">标签</label><input id="entry-tags" name="tags" maxlength="2000"></div>
 </div>
 <p id="editor-error" role="alert"></p>
 <div class="editor-actions"><button type="submit">保存到本浏览器</button><button type="button" id="cancel-edit">取消</button></div>
@@ -116,8 +133,14 @@ let publishedEntries = /* COLLECTION_DATA_START */ [
       "固定バイブ"
     ],
     "rating": 9,
-    "comment": "长相超可爱的男娘，男娘＋固定バイン的组合是神。只可惜公鸭嗓太难听了",
-    "id": "base:MOOC-029"
+    "id": "base:MOOC-029",
+    "originalTitle": "",
+    "chineseTitle": "",
+    "actors": [],
+    "studio": "",
+    "series": "",
+    "released": "",
+    "minutes": null
   },
   {
     "code": "KTRA-796",
@@ -126,8 +149,14 @@ let publishedEntries = /* COLLECTION_DATA_START */ [
       "固定バイブ"
     ],
     "rating": 9,
-    "comment": "可爱灰色内裤＋标准的固定バイブ",
-    "id": "base:KTRA-796"
+    "id": "base:KTRA-796",
+    "originalTitle": "",
+    "chineseTitle": "",
+    "actors": [],
+    "studio": "",
+    "series": "",
+    "released": "",
+    "minutes": null
   },
   {
     "code": "PRTD-027",
@@ -135,8 +164,14 @@ let publishedEntries = /* COLLECTION_DATA_START */ [
       "女仆"
     ],
     "rating": 8,
-    "comment": "松本一香的表情很可爱，可惜没有我很喜欢的play，双手被吊起来的那段还行",
-    "id": "base:PRTD-027"
+    "id": "base:PRTD-027",
+    "originalTitle": "",
+    "chineseTitle": "",
+    "actors": [],
+    "studio": "",
+    "series": "",
+    "released": "",
+    "minutes": null
   },
   {
     "code": "NHDTB-609",
@@ -145,8 +180,14 @@ let publishedEntries = /* COLLECTION_DATA_START */ [
       "固定バイブ"
     ],
     "rating": 9,
-    "comment": "其实是女仆店；女优先被手抠到潮吹，汁液喷出来穿过黑丝和内裤，然后在固定バイブ的状态下当服务员，给了很多裙底视角",
-    "id": "new:f118b64b-88ed-477c-bbbe-1dc2e2d060aa"
+    "id": "new:f118b64b-88ed-477c-bbbe-1dc2e2d060aa",
+    "originalTitle": "",
+    "chineseTitle": "",
+    "actors": [],
+    "studio": "",
+    "series": "",
+    "released": "",
+    "minutes": null
   },
   {
     "code": "SSNI-749",
@@ -155,8 +196,14 @@ let publishedEntries = /* COLLECTION_DATA_START */ [
       "双马尾"
     ],
     "rating": 9,
-    "comment": "有一段先戴着口球被バイブ插到潮吹，然后再用電マ强制高潮",
-    "id": "new:6828087a-5dc0-446f-b8be-f1bd7518d0b5"
+    "id": "new:6828087a-5dc0-446f-b8be-f1bd7518d0b5",
+    "originalTitle": "",
+    "chineseTitle": "",
+    "actors": [],
+    "studio": "",
+    "series": "",
+    "released": "",
+    "minutes": null
   },
   {
     "code": "BBAN-469",
@@ -164,8 +211,14 @@ let publishedEntries = /* COLLECTION_DATA_START */ [
       "女仆"
     ],
     "rating": 9,
-    "comment": "女仆下克上的百合sm，抖s女仆穿花边黑色小腿袜",
-    "id": "new:b635bf25-2f16-45c4-8d69-cdfb4a46dfc1"
+    "id": "new:b635bf25-2f16-45c4-8d69-cdfb4a46dfc1",
+    "originalTitle": "",
+    "chineseTitle": "",
+    "actors": [],
+    "studio": "",
+    "series": "",
+    "released": "",
+    "minutes": null
   },
   {
     "code": "SONE-661",
@@ -174,8 +227,14 @@ let publishedEntries = /* COLLECTION_DATA_START */ [
       "女仆"
     ],
     "rating": 9,
-    "comment": "站在楼梯上被强制高潮的那段好看",
-    "id": "new:c7273d70-5fbe-4d3a-adcb-529a5fb21017"
+    "id": "new:c7273d70-5fbe-4d3a-adcb-529a5fb21017",
+    "originalTitle": "",
+    "chineseTitle": "",
+    "actors": [],
+    "studio": "",
+    "series": "",
+    "released": "",
+    "minutes": null
   },
   {
     "code": "MUDR-335",
@@ -183,8 +242,14 @@ let publishedEntries = /* COLLECTION_DATA_START */ [
       "固定バイブ"
     ],
     "rating": 10,
-    "comment": "很可爱的斑点过膝袜，还慢慢玩弄了女主的草莓图案小背心，后面还有一段黑白条纹内裤的固定バイブ",
-    "id": "new:266a2bb7-e9cc-4434-98dd-2dc2ae1cdef2"
+    "id": "new:266a2bb7-e9cc-4434-98dd-2dc2ae1cdef2",
+    "originalTitle": "",
+    "chineseTitle": "",
+    "actors": [],
+    "studio": "",
+    "series": "",
+    "released": "",
+    "minutes": null
   },
   {
     "code": "MADV-542",
@@ -193,8 +258,14 @@ let publishedEntries = /* COLLECTION_DATA_START */ [
       "固定バイブ"
     ],
     "rating": 8,
-    "comment": "柏木小夏很可爱",
-    "id": "new:89844478-6358-4d1d-8d4b-acde0f293a35"
+    "id": "new:89844478-6358-4d1d-8d4b-acde0f293a35",
+    "originalTitle": "",
+    "chineseTitle": "",
+    "actors": [],
+    "studio": "",
+    "series": "",
+    "released": "",
+    "minutes": null
   },
   {
     "code": "GTJ-128",
@@ -202,8 +273,14 @@ let publishedEntries = /* COLLECTION_DATA_START */ [
       "捆绑"
     ],
     "rating": 9,
-    "comment": "由良加奈被换各种姿势捆绑，拍打小穴到高潮",
-    "id": "new:c4d035ed-831d-408d-a961-b9d7941bdc10"
+    "id": "new:c4d035ed-831d-408d-a961-b9d7941bdc10",
+    "originalTitle": "",
+    "chineseTitle": "",
+    "actors": [],
+    "studio": "",
+    "series": "",
+    "released": "",
+    "minutes": null
   },
   {
     "code": "TDMN-004",
@@ -212,27 +289,65 @@ let publishedEntries = /* COLLECTION_DATA_START */ [
       "双马尾"
     ],
     "rating": 9,
-    "comment": "女主穿着条纹过膝袜排尿，还有隔着小背心用玩具玩弄乳头",
-    "id": "new:09890ffd-1a8d-4d80-b260-f1b14b1f843a"
+    "id": "new:09890ffd-1a8d-4d80-b260-f1b14b1f843a",
+    "originalTitle": "",
+    "chineseTitle": "",
+    "actors": [],
+    "studio": "",
+    "series": "",
+    "released": "",
+    "minutes": null
   },
   {
     "code": "MIBB-002",
     "tags": [],
     "rating": 9,
-    "comment": "松本一香戴眼镜，隔着黑丝和草莓内裤玩弄小穴",
-    "id": "new:d8e1b2a7-5693-4ba8-bd96-422f9f311aca"
+    "id": "new:d8e1b2a7-5693-4ba8-bd96-422f9f311aca",
+    "originalTitle": "",
+    "chineseTitle": "",
+    "actors": [],
+    "studio": "",
+    "series": "",
+    "released": "",
+    "minutes": null
+  },
+  {
+    "id": "base:xxxx-000",
+    "code": "xxxx-000",
+    "originalTitle": "xxxxxxxx",
+    "chineseTitle": "xxxxxxx",
+    "actors": [
+      "xxxxxxx"
+    ],
+    "studio": "I.B.WORKS",
+    "series": "ロリはめ",
+    "released": "2009-07-24",
+    "minutes": 120,
+    "tags": [
+      "条纹过膝袜",
+      "固定バイブ"
+    ]
   }
 ] /* COLLECTION_DATA_END */;
 
 const STORAGE_KEY='jiafei-36.collection.edits.v1';
-const prefix=document.querySelector('#prefix'),tag=document.querySelector('#tag'),sort=document.querySelector('#sort'),list=document.querySelector('.catalog-list');
+const fields={"code":"番号","originalTitle":"原标题","chineseTitle":"中文标题","actors":"出演","studio":"厂商","series":"系列","released":"发布时间","minutes":"时长","tags":"标签"};
+const filterLabels={"prefix":"番号前缀","actor":"演员","studio":"厂商","series":"系列","tag":"标签"};
+const sort=document.querySelector('#sort'),list=document.querySelector('.catalog-list');
 const status=document.querySelector('#save-status'),dialog=document.querySelector('#entry-dialog'),form=document.querySelector('#entry-form'),error=document.querySelector('#editor-error');
 let overrides={},editingId=null,entries=[],lastStored=null;
 function validItem(item){
- return item&&typeof item.code==='string'&&item.code.trim().length>0&&item.code.length<=80&&
- Array.isArray(item.tags)&&item.tags.length<=30&&item.tags.every(t=>typeof t==='string'&&t.length<=100)&&
- typeof item.rating==='number'&&Number.isFinite(item.rating)&&item.rating>=0&&item.rating<=10&&
- typeof item.comment==='string'&&item.comment.length<=10000;
+ if(!item || typeof item.code!=='string' || !item.code.trim() || item.code.length>80) return false;
+ const validList=value=>Array.isArray(value)&&value.every(v=>typeof v==='string'&&v.trim()&&v.length<=2000);
+ if(!validList(item.tags)||!validList(item.actors??[])) return false;
+ if(!['originalTitle','chineseTitle','studio','series'].every(key=>typeof (item[key]??'')==='string')) return false;
+ if(item.released && !validDate(item.released)) return false;
+ return item.minutes==null || (Number.isSafeInteger(item.minutes)&&item.minutes>0);
+}
+function validDate(value){
+ if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+ const date=new Date(value+'T00:00:00Z');
+ return Number.isFinite(date.getTime())&&date.toISOString().startsWith(value+'T');
 }
 function combined(data){
  const ids=new Set(publishedEntries.map(item=>item.id));
@@ -243,24 +358,47 @@ try{
  const raw=localStorage.getItem(STORAGE_KEY);lastStored=raw;
  if(raw){
   const saved=JSON.parse(raw);
-  if(saved.version!==1||!saved.items||Array.isArray(saved.items)||typeof saved.items!=='object'||
+  if(![1,2].includes(saved.version)||!saved.items||Array.isArray(saved.items)||typeof saved.items!=='object'||
   !Object.entries(saved.items).every(([id,item])=>/^(base:|new:)/.test(id)&&validItem(item)))throw Error('invalid');
-  overrides=saved.items;
+  overrides=Object.fromEntries(Object.entries(saved.items).map(([id,item])=>{
+   const base=publishedEntries.find(entry=>entry.id===id);
+   return [id,itemData({...base,...item})];
+  }));
   status.textContent='已加载此浏览器保存的修改。';
  }
 }catch(e){status.textContent='本地数据暂时无法读取，当前显示网站版本。请先检查浏览器存储设置。';}
+function filterValues(item,key){
+ switch(key){
+  case 'prefix': return [item.code.match(/^[A-Za-z]+(?=[\s_-]*\d)/)?.[0].toUpperCase()??''];
+  case 'actor': return item.actors;
+  case 'tag': return item.tags;
+  default: return [item[key]];
+ }
+}
 function refreshOptions(){
- const p=prefix.value,t=tag.value;
- prefix.replaceChildren(new Option('全部番号',''));tag.replaceChildren(new Option('全部标签',''));
- for(const value of [...new Set(entries.map(item=>item.code.split('-')[0]))].sort())prefix.add(new Option(value,value));
- for(const value of [...new Set(entries.flatMap(item=>item.tags))].sort((a,b)=>a.localeCompare(b,'zh-CN')))tag.add(new Option(value,value));
- prefix.value=p;tag.value=t;
- if(prefix.selectedIndex<0)prefix.value='';if(tag.selectedIndex<0)tag.value='';
+ for(const [key,label] of Object.entries(filterLabels)){
+  const select=document.getElementById(key);
+  const previous=select.value;
+  const values=[...new Set(entries.flatMap(item=>filterValues(item,key)).filter(Boolean))];
+  select.replaceChildren(new Option('全部'+label,''));
+  for(const value of values.sort((a,b)=>a.localeCompare(b,'zh-CN'))) select.add(new Option(value,value));
+  select.value=values.includes(previous)?previous:'';
+ }
+}
+function resetFilters(){
+ for(const key of Object.keys(filterLabels)) document.getElementById(key).value='';
 }
 function render(){
  entries=combined(overrides);refreshOptions();
- const filtered=entries.filter(item=>(!prefix.value||item.code.split('-')[0]===prefix.value)&&(!tag.value||item.tags.includes(tag.value)))
- .sort((a,b)=>sort.value==='asc'?a.rating-b.rating:b.rating-a.rating);
+ const [order,direction]=sort.value.split('-');
+ const active=Object.keys(filterLabels).map(key=>[key,document.getElementById(key).value]).filter(([,v])=>v);
+ const filtered=entries.filter(item=>active.every(([key,value])=>filterValues(item,key).includes(value)));
+ filtered.sort((a,b)=>{
+  const left=a[order],right=b[order];
+  if(!left||!right) return Number(!left)-Number(!right);
+  const diff=order==='minutes'?left-right:left.localeCompare(right);
+  return direction==='asc'?diff:-diff;
+ });
  document.querySelector('.catalog-count').textContent='共 '+filtered.length+' 个条目';list.replaceChildren();
  if(!filtered.length){const p=document.createElement('p');p.className='empty';p.textContent=entries.length?'没有符合条件的条目，请调整筛选条件。':'暂无条目。';list.append(p);return;}
  for(const item of filtered){
@@ -270,51 +408,105 @@ function render(){
   const edit=document.createElement('button');edit.type='button';edit.className='entry-edit';edit.textContent='编辑';edit.setAttribute('aria-label','编辑 '+item.code);edit.addEventListener('click',()=>openEditor(item.id));
   heading.append(title,edit);article.append(heading);
   const dl=document.createElement('dl');
-  for(const [label,value] of [['标签',item.tags.join('、')],['评分',item.rating+'/10'],['评论',item.comment]]){
-   if(label==='评论'&&!value)continue;
+  for(const [key,label] of Object.entries(fields)){
+   if(key==='code')continue;
    const group=document.createElement('div'),dt=document.createElement('dt'),dd=document.createElement('dd');
-   if(label==='评论')group.className='catalog-comment';
-   dt.textContent=label;dd.textContent=value;if(label==='评分')dd.className='rating';
+   dt.textContent=label;
+   if(['originalTitle','chineseTitle','tags'].includes(key))group.className='wide-field';
+   const value=item[key];
+   if(key==='tags'){
+    dd.className='tag-list';
+    for(const tag of value){
+     const chip=document.createElement('span');
+     chip.className='tag-chip';
+     chip.textContent=tag;
+     dd.append(chip);
+    }
+   }else if(key==='released'&&value){
+    const [y,m,d]=value.split('-');
+    dd.textContent=y+'年'+Number(m)+'月'+Number(d)+'日';
+   }else if(key==='minutes')dd.textContent=value?value+'分钟':'';
+   else dd.textContent=Array.isArray(value)?value.join('、'):value;
    group.append(dt,dd);dl.append(group);
   }
   article.append(dl);list.append(article);
  }
 }
 function openEditor(id=null){
- editingId=id;form.reset();error.textContent='';
+ editingId=id;form.reset();pasteInput.setCustomValidity('');error.textContent='';
  const item=entries.find(item=>item.id===id);
  document.querySelector('#editor-title').textContent=item?'编辑条目':'新增条目';
- if(item){form.elements.code.value=item.code;form.elements.rating.value=item.rating;form.elements.tags.value=item.tags.join('、');form.elements.comment.value=item.comment;}
- dialog.showModal();form.elements.code.focus();
+ document.querySelector('#paste-row').hidden=Boolean(item);
+ for(const key of Object.keys(fields)){
+  const value=item?.[key];
+  form.elements[key].value=Array.isArray(value)?value.join('、'):value??'';
+ }
+ dialog.showModal();(item?form.elements.code:document.querySelector('#entry-paste')).focus();
 }
+function splitList(value){
+ return [...new Set(value.split(/[,，、;；]/).map(v=>v.trim()).filter(Boolean))];
+}
+const pasteInput=document.querySelector('#entry-paste');
+pasteInput.addEventListener('input',()=>{
+ error.textContent='';
+ const labels=Object.fromEntries(Object.entries(fields).map(([key,label])=>[label,key]));
+ labels['演员']='actors';
+ const values={};
+ const problems=[];
+ for(const line of pasteInput.value.split(/\r?\n/).map(line=>line.trim()).filter(Boolean)){
+  const match=line.match(/^([^:：]+)[:：](.*)$/);
+  const key=match&&labels[match[1].trim()];
+  if(!key||!Object.hasOwn(fields,key)){problems.push('无法识别：'+line);continue;}
+  if(Object.hasOwn(values,key)){problems.push('重复字段：'+fields[key]);continue;}
+  let value=match[2].trim();
+  if(key==='released'&&value){
+   const parts=value.match(/^(\d{4})[年.\/-](\d{1,2})[月.\/-](\d{1,2})日?$/);
+   value=parts?parts[1]+'-'+parts[2].padStart(2,'0')+'-'+parts[3].padStart(2,'0'):'';
+   if(!validDate(value))problems.push('请在原文中检查发布时间。');
+  }
+  if(key==='minutes'&&value){
+   const time=value.match(/^(\d+)\s*(?:分钟|分|min)?$/i);
+   value=time?time[1]:'';
+   if(!Number.isSafeInteger(Number(value))||Number(value)<1)problems.push('请在原文中使用正整数分钟。');
+  }
+  values[key]=value;
+ }
+ for(const key of Object.keys(fields))form.elements[key].value=values[key]??'';
+ pasteInput.setCustomValidity(problems.join(' '));
+ error.textContent=problems.join(' ');
+});
 function persist(next){
  try{
  if(localStorage.getItem(STORAGE_KEY)!==lastStored)throw Error('changed');
- const data=JSON.stringify({version:1,items:next});localStorage.setItem(STORAGE_KEY,data);lastStored=data;
+ const data=JSON.stringify({version:2,items:next});localStorage.setItem(STORAGE_KEY,data);lastStored=data;
  }
  catch(e){if(e.message==='changed')throw Error('另一个标签页修改了数据，请先导出当前内容，再刷新页面后重试。');throw Error('未能保存：浏览器存储不可用或空间不足。请保留表单内容，检查浏览器设置后重试。');}
  overrides=next;
 }
 form.addEventListener('submit',event=>{
  event.preventDefault();error.textContent='';
- const item={code:form.elements.code.value.trim().toUpperCase(),rating:Number(form.elements.rating.value),
- tags:[...new Set(form.elements.tags.value.split(/[,，、;；]/).map(t=>t.trim()).filter(Boolean))],comment:form.elements.comment.value.trim()};
- if(!validItem(item)){error.textContent='请检查编号、标签长度和评分（0–10）。';return;}
- if(entries.some(e=>e.id!==editingId&&e.code.toUpperCase()===item.code)){error.textContent='该编号已存在，请编辑已有条目或使用其他编号。';return;}
+ const item=Object.fromEntries(Object.keys(fields).map(key=>[key,form.elements[key].value.trim()]));
+ item.tags=splitList(item.tags);
+ item.actors=splitList(item.actors);
+ item.minutes=item.minutes?Number(item.minutes):null;
+ const previous=entries.find(entry=>entry.id===editingId);
+ if(previous?.rating!=null)item.rating=previous.rating;
+ if(!validItem(item)){error.textContent='请检查番号、日期和时长。';return;}
+ if(entries.some(e=>e.id!==editingId&&e.code.toUpperCase()===item.code.toUpperCase())){error.textContent='该编号已存在，请编辑已有条目或使用其他编号。';return;}
  try{
   persist({...overrides,[editingId||'new:'+crypto.randomUUID()]:item});
-  prefix.value='';tag.value='';render();dialog.close();status.textContent='已保存到本浏览器，尚未同步到公开网站。';
+  resetFilters();render();dialog.close();status.textContent='已保存到本浏览器，尚未同步到公开网站。';
  }catch(e){error.textContent=e.message;}
 });
 document.querySelector('#add-entry').addEventListener('click',()=>openEditor());
 document.querySelector('#cancel-edit').addEventListener('click',()=>dialog.close());
 document.querySelector('#reset-local').addEventListener('click',()=>{
  if(!confirm('这会清除此浏览器的本地修改并恢复网站版本。请先导出需要保留的内容。是否继续？'))return;
- try{localStorage.removeItem(STORAGE_KEY);lastStored=null;overrides={};prefix.value='';tag.value='';render();status.textContent='已恢复网站版本。';}
+ try{localStorage.removeItem(STORAGE_KEY);lastStored=null;overrides={};resetFilters();render();status.textContent='已恢复网站版本。';}
  catch(e){status.textContent='无法清除本地数据，请检查浏览器存储设置。';}
 });
 document.querySelector('#export-entries').addEventListener('click',()=>{
- const data={version:1,entries:entries.map(({id,...item})=>item)};
+ const data={version:2,entries:entries.map(({id,...item})=>item)};
  const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
  const link=document.createElement('a');link.href=url;link.download='collection-backup-'+new Date().toISOString().slice(0,10)+'.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  status.textContent='已生成备份文件，请确认浏览器已保存下载。';
@@ -325,13 +517,17 @@ document.querySelector('#backup-file').addEventListener('change',async event=>{
  try{
   if(file.size>2000000)throw Error('备份文件过大，请使用小于 2 MB 的文件。');
   const data=JSON.parse(await file.text());
-  if(data.version!==1||!Array.isArray(data.entries)||!data.entries.every(validItem))throw Error('备份格式不正确，未导入。');
+  if(![1,2].includes(data.version)||!Array.isArray(data.entries)||!data.entries.every(validItem))throw Error('备份格式不正确，未导入。');
   const seen=new Set();
   for(const item of data.entries){const code=item.code.trim().toUpperCase();if(seen.has(code))throw Error('备份存在重复编号，未导入。');seen.add(code);}
   if(!confirm('导入会覆盖本浏览器中相同编号的条目，并添加新条目。是否继续？'))return;
   const next={...overrides};
-  for(const item of data.entries){const normalized={...item,code:item.code.trim().toUpperCase()};const old=entries.find(e=>e.code.toUpperCase()===normalized.code);next[old?.id||'new:'+crypto.randomUUID()]=normalized;}
-  persist(next);prefix.value='';tag.value='';render();status.textContent='备份已导入本浏览器，尚未同步到公开网站。';
+  for(const item of data.entries){
+   const code=item.code.trim();
+   const old=entries.find(entry=>entry.code.toUpperCase()===code.toUpperCase());
+   next[old?.id||'new:'+crypto.randomUUID()]=itemData({...old,...item,code});
+  }
+  persist(next);resetFilters();render();status.textContent='备份已导入本浏览器，尚未同步到公开网站。';
  }catch(e){status.textContent=e instanceof SyntaxError?'文件不是有效的 JSON 备份，未导入。':e.message;}
  finally{event.target.value='';}
 });
@@ -342,7 +538,13 @@ window.addEventListener('storage',event=>{if(event.key===STORAGE_KEY)status.text
 const githubFileAPI='https://api.github.com/repos/jiafei-36/jiafei-36.github.io/contents/collection.html';
 const publishDialog=document.querySelector('#publish-dialog'),publishForm=document.querySelector('#publish-form'),publishError=document.querySelector('#publish-error'),tokenInput=document.querySelector('#github-token');
 let publishing=false;
-function itemData(item){return {code:item.code,tags:[...item.tags],rating:item.rating,comment:item.comment};}
+function itemData(item){
+ const data={code:item.code,originalTitle:item.originalTitle??'',chineseTitle:item.chineseTitle??'',
+  actors:[...(item.actors??[])],studio:item.studio??'',series:item.series??'',released:item.released??'',
+  minutes:item.minutes??null,tags:[...item.tags]};
+ if(typeof item.rating==='number')data.rating=item.rating;
+ return data;
+}
 function sameItem(a,b){return !!a&&!!b&&JSON.stringify(itemData(a))===JSON.stringify(itemData(b));}
 function pendingChanges(){return Object.entries(overrides).filter(([id,item])=>!sameItem(item,publishedEntries.find(p=>p.id===id)));}
 function parsePublished(source){
@@ -399,7 +601,7 @@ document.querySelector('#publish-entries').addEventListener('click',()=>{
  if(!changes.length){status.textContent='没有待发布的本地修改。';return;}
  document.querySelector('#publish-summary').textContent='将发布 '+changes.length+' 个新增或修改的条目。';
  const preview=document.querySelector('#publish-list');preview.replaceChildren();
- for(const [,item] of changes){const li=document.createElement('li');li.textContent=item.code+' · '+item.rating+'/10';preview.append(li);}
+ for(const [,item] of changes){const li=document.createElement('li');li.textContent=[item.code,item.chineseTitle||item.originalTitle].filter(Boolean).join(' · ');preview.append(li);}
  publishDialog.showModal();
 });
 document.querySelector('#cancel-publish').addEventListener('click',()=>publishDialog.close());
